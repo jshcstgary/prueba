@@ -1,0 +1,91 @@
+<app-person-form (onClose)="close()" />
+
+<div class="w-full rounded-lg border border-base-content/25">
+	<div class="overflow-x-auto">
+		<table class="table rounded">
+			<thead>
+				<tr class="border-0 bg-base-300">
+					<th class="rounded-s-lg">
+						<input type="checkbox" class="checkbox checkbox-primary checkbox-sm" aria-label="product" [disabled]="users().length === 0" />
+					</th>
+
+					<th>Identificación</th>
+
+					<th>Nombres</th>
+
+					<th>Apellidos</th>
+
+					<th>Nombre de usuario</th>
+
+					<th>Correo</th>
+
+					<th>Rol</th>
+
+					<th>Sessión activa</th>
+
+					<th>Estado</th>
+
+					<th class="rounded-e-lg">Acciones</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@for (user of users(); track user.identification) {
+					<tr class="hover">
+						<th>
+							<label>
+								<input type="checkbox" class="checkbox checkbox-primary checkbox-sm" aria-label="product" />
+							</label>
+						</th>
+
+						<td class="text-nowrap">{{ user.identification }}</td>
+
+						<td>{{ user.names }}</td>
+
+						<td>{{ user.surnames }}</td>
+
+						<td>{{ user.username }}</td>
+
+						<td>{{ user.email }}</td>
+
+						<td>{{ user.email }}</td>
+
+						<td>
+							@if (user.sessionActive) {
+								<span class="badge badge-success badge-soft text-xs">ACTIVO</span>
+							} @else {
+								<span class="badge badge-neutral badge-soft text-xs">INACTIVO</span>
+							}
+						</td>
+
+						<td>
+							@switch (user.status) {
+								@case ("ACTIVE") {
+									<span class="badge badge-success badge-soft text-xs">ACTIVO</span>
+								}
+								@case ("LOCK") {
+									<span class="badge badge-warning badge-soft text-xs">BLOQUEADO</span>
+								}
+								@case ("DELETE") {
+									<span class="badge badge-error badge-soft text-xs">ELIMINADO</span>
+								}
+							}
+						</td>
+
+						<td>
+							<button type="button" class="btn btn-circle btn-text btn-sm" aria-label="Action button"><span class="icon-[tabler--pencil] size-5"></span></button>
+
+							<button type="button" class="btn btn-circle btn-text btn-sm" aria-label="Action button"><span class="icon-[tabler--trash] size-5"></span></button>
+
+							<button type="button" class="btn btn-circle btn-text btn-sm" aria-label="Action button"><span class="icon-[tabler--dots-vertical] size-5"></span></button>
+						</td>
+					</tr>
+				} @empty {
+					<tr>
+						<td colspan="9" class="h-20 text-center">No existen registros.</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

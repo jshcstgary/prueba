@@ -12,22 +12,15 @@ namespace PruebaViamaticaBackend.Controllers;
 
 [Route("api/role_option")]
 [ApiController]
-public class RoleOptionController : ControllerBase
+public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOptionService service) : ControllerBase
 {
-	private readonly ILogger<RoleOptionController> _logger;
+	private readonly ILogger<RoleOptionController> _logger = logger;
 
-	private readonly IRoleOptionService _service;
+	private readonly IRoleOptionService _service = service;
 
-	private ApiResponse _apiResponse;
+	private readonly ApiResponse _apiResponse = new ApiResponse();
 
-	public RoleOptionController(ILogger<RoleOptionController> logger, IRoleOptionService service)
-	{
-		_logger = logger;
-		_service = service;
-		_apiResponse = new ApiResponse();
-	}
-
-	[HttpPost(Name = "RoleOptionController_Create")]
+    [HttpPost(Name = "RoleOptionController_Create")]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status201Created)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]

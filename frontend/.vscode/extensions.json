@@ -1,0 +1,28 @@
+{
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
+	"recommendations": [
+		"angular.ng-template",
+		"lauren.angular-pack",
+		"formulahendry.auto-complete-tag",
+		"aaron-bond.better-comments",
+		"naumovs.color-highlight",
+		"bierner.color-info",
+		"usernamehw.errorlens",
+		"dbaeumer.vscode-eslint",
+		"vincaslt.highlight-matching-tag",
+		"kisstkondoros.vscode-gutter-preview",
+		"wix.vscode-import-cost",
+		"xabikos.JavaScriptSnippets",
+		"crystal-spider.jsdoc-generator",
+		"bierner.jsdoc-markdown-highlighting",
+		"christian-kohler.npm-intellisense",
+		"esbenp.prettier-vscode",
+		"YoavBls.pretty-ts-errors",
+		"kuscamara.remove-unused-imports",
+		"rcore.rcore-unused-css-classes",
+		"pflannery.vscode-versionlens",
+		"jeff-hykin.better-dockerfile-syntax",
+		"magnobiet.docker-extension-pack",
+		"KalimahApps.tailwindcss-kit"
+	]
+}

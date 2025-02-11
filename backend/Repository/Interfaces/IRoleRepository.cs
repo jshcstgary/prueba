@@ -10,9 +10,9 @@ public interface IRoleRepository
 
 	Task<IEnumerable<Role>> GetAll(Expression<Func<Role, bool>>? filter = null);
 
-	Task<Role?> GetOne(Expression<Func<Role, bool>>? filter = null);
+	Task<Role?> GetOne(Expression<Func<Role, bool>> filter);
 
-	Task<Role> Update(Role role);
+	Task<Role?> Update(Role role);
 
 	Task Delete(Role role);
 

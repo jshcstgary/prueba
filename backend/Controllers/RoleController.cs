@@ -11,22 +11,15 @@ namespace PruebaViamaticaBackend.Controllers;
 
 [Route("api/role")]
 [ApiController]
-public class RoleController : ControllerBase
+public class RoleController(ILogger<RoleController> logger, IRoleService service) : ControllerBase
 {
-	private readonly ILogger<RoleController> _logger;
+	private readonly ILogger<RoleController> _logger = logger;
 
-	private readonly IRoleService _service;
+	private readonly IRoleService _service = service;
 
-	private ApiResponse _apiResponse;
+	private readonly ApiResponse _apiResponse = new ApiResponse();
 
-	public RoleController(ILogger<RoleController> logger, IRoleService service)
-	{
-		_logger = logger;
-		_service = service;
-		_apiResponse = new ApiResponse();
-	}
-
-	[HttpPost(Name = "RoleController_Create")]
+    [HttpPost(Name = "RoleController_Create")]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status201Created)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]

@@ -8,6 +8,8 @@ public partial class Session
 
 	public DateTime CloseDate { get; set; }
 
+	public string Status { get; set; } = null!;
+
 	public int IdUser { get; set; }
 
 	public virtual User IdUserNavigation { get; set; } = null!;

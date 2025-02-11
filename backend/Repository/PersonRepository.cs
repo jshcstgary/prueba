@@ -32,7 +32,6 @@ public class PersonRepository : IPersonRepository
 		await _context.SaveChangesAsync();
 	}
 
-	// public async Task<Person> Create(Person person)
 	public async Task<int?> Create(Person person)
 	{
 		_logger.LogInformation("Executing Repository class - Create method");
@@ -106,8 +105,6 @@ public class PersonRepository : IPersonRepository
 			);
 
 			return idPerson.Value != DBNull.Value ? (int?)idPerson.Value : null;
-
-			// return entityEntry.Entity;
 		}
 		catch (SqlException ex)
 		{
@@ -155,6 +152,7 @@ public class PersonRepository : IPersonRepository
 
 			return await query
 				.Include(person => person.User)
+				.AsNoTracking()
 				.ToListAsync();
 		}
 		catch (Exception)
@@ -167,22 +165,16 @@ public class PersonRepository : IPersonRepository
 		}
 	}
 
-	public async Task<Person?> GetOne(Expression<Func<Person, bool>>? filter = null)
+	public async Task<Person?> GetOne(Expression<Func<Person, bool>> filter)
 	{
 		_logger.LogInformation("Executing Repository class - GetOne method");
 
 		try
 		{
-			IQueryable<Person> query = dbSet;
-
-			if (filter != null)
-			{
-				query = query.Where(filter);
-			}
-
-			return await query
+			return await dbSet
 				.Include(person => person.User)
-				.FirstOrDefaultAsync();
+				.AsNoTracking()
+				.FirstOrDefaultAsync(filter);
 		}
 		catch (Exception)
 		{
@@ -200,11 +192,66 @@ public class PersonRepository : IPersonRepository
 
 		try
 		{
-			EntityEntry<Person> entityEntry = _context.Update(person);
+			var idPerson = new SqlParameter("@IdPerson", System.Data.SqlDbType.Int)
+			{
+				Value = person.Id,
+				Direction = System.Data.ParameterDirection.Input
+			};
 
-			await Save();
+			var names = new SqlParameter("@Names", System.Data.SqlDbType.NVarChar, 60)
+			{
+				Value = person.Names,
+				Direction = System.Data.ParameterDirection.Input
+			};
 
-			return entityEntry.Entity;
+			var surnames = new SqlParameter("@Surnames", System.Data.SqlDbType.NVarChar, 60)
+			{
+				Value = person.Surnames,
+				Direction = System.Data.ParameterDirection.Input
+			};
+
+			var birthDate = new SqlParameter("@BirthDate", System.Data.SqlDbType.DateTime)
+			{
+				Value = person.BirthDate,
+				Direction = System.Data.ParameterDirection.Input
+			};
+
+			var idUser = new SqlParameter("@IdUser", System.Data.SqlDbType.Int)
+			{
+				Value = person.User!.Id,
+				Direction = System.Data.ParameterDirection.Input
+			};
+
+			var username = new SqlParameter("@Username", System.Data.SqlDbType.NVarChar, 50)
+			{
+				Value = person.User.Username,
+				Direction = System.Data.ParameterDirection.Input
+			};
+
+			var password = new SqlParameter("@Password", System.Data.SqlDbType.NVarChar, 50)
+			{
+				Value = person.User.Password,
+				Direction = System.Data.ParameterDirection.Input
+			};
+
+			var sessionActive = new SqlParameter("@SessionActive", System.Data.SqlDbType.Bit)
+			{
+				Value = person.User.SessionActive,
+				Direction = System.Data.ParameterDirection.Input
+			};
+
+			var status = new SqlParameter("@Status", System.Data.SqlDbType.NVarChar, 20)
+			{
+				Value = person.User.Status,
+				Direction = System.Data.ParameterDirection.Input
+			};
+
+			int rowsAffected = await _context.Database.ExecuteSqlRawAsync(
+				"EXEC UPDATE_PERSON_USER @IdPerson, @Names, @Surnames, @BirthDate, @IdUser, @Username, @Password, @SessionActive, @Status",
+				idPerson, names, surnames, birthDate, idUser, username, password, sessionActive, status
+			);
+
+			return person;
 		}
 		catch (SqlException ex)
 		{

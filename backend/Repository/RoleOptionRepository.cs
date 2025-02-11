@@ -77,20 +77,15 @@ public class RoleOptionRepository : IRoleOptionRepository
 		}
 	}
 
-	public async Task<RoleOption?> GetOne(Expression<Func<RoleOption, bool>>? filter = null)
+	public async Task<RoleOption?> GetOne(Expression<Func<RoleOption, bool>> filter)
 	{
 		_logger.LogInformation("Executing Repository class - GetOne method");
 
 		try
 		{
-			IQueryable<RoleOption> query = dbSet;
-
-			if (filter != null)
-			{
-				query = query.Where(filter);
-			}
-
-			return await query.FirstOrDefaultAsync();
+			return await dbSet
+				.AsNoTracking()
+				.FirstOrDefaultAsync(filter);
 		}
 		catch (Exception)
 		{

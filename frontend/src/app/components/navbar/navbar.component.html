@@ -1,0 +1,29 @@
+<nav class="navbar sticky top-0 h-16 border-base-content/25 bg-base-100 max-sm:rounded-box max-sm:shadow lg:border-b">
+	<button type="button" class="btn btn-text me-2 max-sm:btn-square lg:hidden" aria-haspopup="dialog" aria-expanded="false" aria-controls="sidebar" data-overlay="#sidebar-overlay">
+		<span class="icon-[tabler--menu-2] size-5"></span>
+	</button>
+
+	<div class="flex flex-1 items-center">
+		<a class="link link-neutral flex items-center gap-2 text-xl font-semibold text-base-content no-underline" [routerLink]="['/']">
+			<app-logo />
+		</a>
+	</div>
+
+	<div class="navbar-end flex items-center gap-4">
+		<div class="inline-flex items-center gap-3">
+			<div class="flex flex-col items-end">
+				<h6 class="text-lg font-semibold text-base-content">John Doe</h6>
+
+				<small class="text-base-content/50">
+					<a href="#">Cerrar sesión</a>
+				</small>
+			</div>
+
+			<div class="avatar">
+				<div class="size-9.5 rounded-full">
+					<img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" alt="avatar 1" />
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>

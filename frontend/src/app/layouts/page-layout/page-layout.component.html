@@ -1,0 +1,13 @@
+<app-navbar />
+
+<div class="lg:flex lg:h-[calc(100vh-64px)] lg:items-stretch">
+	<app-sidebar />
+
+	<div class="flex-1 overflow-y-auto p-5 lg:h-[calc(100vh-64px)]">
+		@if (title() !== "") {
+			<h2 class="my-10 text-4xl font-bold">{{ title() }}</h2>
+		}
+
+		<router-outlet />
+	</div>
+</div>

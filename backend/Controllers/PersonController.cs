@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 using Microsoft.AspNetCore.Mvc;
@@ -11,27 +12,20 @@ namespace PruebaViamaticaBackend.Controllers;
 
 [Route("api/person")]
 [ApiController]
-public class PersonController : ControllerBase
+public class PersonController(ILogger<PersonController> logger, IPersonService service) : ControllerBase
 {
-	private readonly ILogger<PersonController> _logger;
+	private readonly ILogger<PersonController> _logger = logger;
 
-	private readonly IPersonService _service;
+	private readonly IPersonService _service = service;
 
-	private ApiResponse _apiResponse;
+	private readonly ApiResponse _apiResponse = new ApiResponse();
 
-	public PersonController(ILogger<PersonController> logger, IPersonService service)
-	{
-		_logger = logger;
-		_service = service;
-		_apiResponse = new ApiResponse();
-	}
-
-	[HttpPost(Name = "PersonController_Create")]
+    [HttpPost(Name = "PersonController_Create")]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status201Created)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
-	public async Task<ActionResult<Person>> Create([FromBody] PersonCreateDto personCreateDto)
+	public async Task<ActionResult<ApiResponse>> Create([FromBody] PersonCreateDto personCreateDto)
 	{
 		_logger.LogInformation("Executing PersonController class - Create method");
 
@@ -70,7 +64,6 @@ public class PersonController : ControllerBase
 				return BadRequest(_apiResponse);
 			}
 
-			// PersonDto personDto = await _service.Create(personCreateDto);
 			int? idPerson = await _service.Create(personCreateDto);
 
 			if (idPerson == null)
@@ -248,13 +241,13 @@ public class PersonController : ControllerBase
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
-	public async Task<ActionResult<ApiResponse>> Update([FromBody] PersonDto personDto)
+	public async Task<ActionResult<ApiResponse>> Update([FromBody] PersonUpdateDto personUpdateDto)
 	{
 		_logger.LogInformation("Executing PersonController class - Update method");
 
 		try
 		{
-			if (personDto == null)
+			if (personUpdateDto == null)
 			{
 				_logger.LogError("PersonController class - Update method - No data recieved.");
 
@@ -265,7 +258,7 @@ public class PersonController : ControllerBase
 				return BadRequest(_apiResponse);
 			}
 
-			PersonDto? personUpdatedDto = await _service.Update(personDto);
+			PersonDto? personUpdatedDto = await _service.Update(personUpdateDto);
 
 			if (personUpdatedDto == null)
 			{

@@ -1,7 +1,5 @@
 using System.Linq.Expressions;
 
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-
 using PruebaViamaticaBackend.Models;
 
 namespace PruebaViamaticaBackend.Repository.Interfaces;
@@ -13,7 +11,7 @@ public interface IPersonRepository
 
 	Task<IEnumerable<Person>> GetAll(Expression<Func<Person, bool>>? filter = null);
 
-	Task<Person?> GetOne(Expression<Func<Person, bool>>? filter = null);
+	Task<Person?> GetOne(Expression<Func<Person, bool>> filter);
 
 	Task<Person> Update(Person person);
 

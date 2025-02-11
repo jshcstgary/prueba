@@ -18,7 +18,7 @@ public partial class User
 
 	public virtual Person IdNavigation { get; set; } = null!;
 
-	public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
+	public virtual ICollection<Session> Sessions { get; set; } = [];
 
-	public virtual ICollection<Role> IdRols { get; set; } = new List<Role>();
+	public virtual ICollection<Role> IdRoles { get; set; } = [];
 }

@@ -38,6 +38,12 @@ public class RoleRepository : IRoleRepository
 		{
 			EntityEntry<Role> entityEntry = await dbSet.AddAsync(role);
 
+			foreach (RoleOption roleOption in role.RoleOptions)
+			{
+				_context.Set<RoleOption>().Attach(roleOption);
+				_context.Entry(roleOption).State = EntityState.Unchanged;
+			}
+
 			await Save();
 
 			return entityEntry.Entity;
@@ -65,7 +71,10 @@ public class RoleRepository : IRoleRepository
 				query = query.Where(filter);
 			}
 
-			return await query.ToListAsync();
+			return await query
+				.Include(role => role.RoleOptions)
+				.AsNoTracking()
+				.ToListAsync();
 		}
 		catch (Exception)
 		{
@@ -77,20 +86,16 @@ public class RoleRepository : IRoleRepository
 		}
 	}
 
-	public async Task<Role?> GetOne(Expression<Func<Role, bool>>? filter = null)
+	public async Task<Role?> GetOne(Expression<Func<Role, bool>> filter)
 	{
 		_logger.LogInformation("Executing Repository class - GetOne method");
 
 		try
 		{
-			IQueryable<Role> query = dbSet;
-
-			if (filter != null)
-			{
-				query = query.Where(filter);
-			}
-
-			return await query.FirstOrDefaultAsync();
+			return await dbSet
+				.Include(role => role.RoleOptions)
+				.AsNoTracking()
+				.FirstOrDefaultAsync(filter);
 		}
 		catch (Exception)
 		{
@@ -102,17 +107,49 @@ public class RoleRepository : IRoleRepository
 		}
 	}
 
-	public async Task<Role> Update(Role role)
+	public async Task<Role?> Update(Role role)
 	{
 		_logger.LogInformation("Executing Repository class - Update method");
 
 		try
 		{
-			EntityEntry<Role> entityEntry = _context.Update(role);
+			Role? existingRole = await dbSet
+				.Include(role => role.RoleOptions)
+				.FirstOrDefaultAsync(r => r.Id == role.Id);
+
+			if (existingRole == null)
+			{
+				return null;
+			}
+
+			existingRole.Name = role.Name;
+			existingRole.Status = role.Status;
+
+			List<int> newRoleOptionIds = [.. role.RoleOptions.Select(roleOption => roleOption.Id)];
+			List<int> currentRoleOptionIds = [.. existingRole.RoleOptions.Select(ro => ro.Id)];
+
+			List<RoleOption> roleOptionsToRemove = [.. existingRole.RoleOptions.Where(roleOption => !newRoleOptionIds.Contains(roleOption.Id))];
+
+			foreach (RoleOption roleOptionToRemove in roleOptionsToRemove)
+			{
+				existingRole.RoleOptions.Remove(roleOptionToRemove);
+			}
+
+			List<RoleOption> roleOptionsToAdd = [.. role.RoleOptions.Where(roleOption => !currentRoleOptionIds.Contains(roleOption.Id))];
+
+			foreach (RoleOption roleOptionToAdd in roleOptionsToAdd)
+			{
+				if (!_context.RoleOptions.Local.Any(roleOption => roleOption.Id == roleOptionToAdd.Id))
+				{
+					_context.Attach(roleOptionToAdd);
+				}
+
+				existingRole.RoleOptions.Add(roleOptionToAdd);
+			}
 
 			await Save();
 
-			return entityEntry.Entity;
+			return existingRole;
 		}
 		catch (Exception)
 		{

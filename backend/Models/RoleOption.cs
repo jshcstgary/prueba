@@ -6,5 +6,7 @@ public partial class RoleOption
 
 	public string Name { get; set; } = null!;
 
-	public virtual ICollection<Role> IdRols { get; set; } = new List<Role>();
+	public string Status { get; set; } = null!;
+
+	public virtual ICollection<Role> IdRoles { get; set; } = [];
 }

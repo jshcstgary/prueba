@@ -1,0 +1,61 @@
+{
+	"[css]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[html]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[markdown]": {
+		"editor.defaultFormatter": "yzhang.markdown-all-in-one"
+	},
+	"[postcss]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[scss]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"eslint.codeAction.showDocumentation": {
+		"enable": true
+	},
+	"eslint.codeActionsOnSave.mode": "problems",
+	"eslint.rules.customizations": [
+		{
+			"rule": "@stylistic/indent",
+			"severity": "warn"
+		},
+		{
+			"rule": "quotes",
+			"severity": "warn"
+		},
+		{
+			"rule": "semi",
+			"severity": "warn"
+		}
+	],
+	"prettier.arrowParens": "always",
+	"prettier.enableDebugLogs": true,
+	"prettier.printWidth": 1000,
+	"prettier.tabWidth": 4,
+	"prettier.trailingComma": "none",
+	"prettier.useEditorConfig": false,
+	"prettier.useTabs": true,
+	"prettier.vueIndentScriptAndStyle": true
+}

@@ -10,7 +10,7 @@ public interface IRoleOptionRepository
 
 	Task<IEnumerable<RoleOption>> GetAll(Expression<Func<RoleOption, bool>>? filter = null);
 
-	Task<RoleOption?> GetOne(Expression<Func<RoleOption, bool>>? filter = null);
+	Task<RoleOption?> GetOne(Expression<Func<RoleOption, bool>> filter);
 
 	Task<RoleOption> Update(RoleOption roleOption);
 

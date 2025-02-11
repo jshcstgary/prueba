@@ -1,5 +1,7 @@
 using System.Net;
 
+using Microsoft.AspNetCore.Mvc;
+
 namespace PruebaViamaticaBackend.Models;
 
 public class ApiResponse

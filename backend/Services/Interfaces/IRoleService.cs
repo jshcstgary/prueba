@@ -10,7 +10,7 @@ public interface IRoleService
 {
     Task<RoleDto> Create(RoleCreateDto roleCreateDto);
     Task<IEnumerable<RoleDto>> GetAll(Expression<Func<Role, bool>>? filter = null);
-    Task<RoleDto?> GetOne(Expression<Func<Role, bool>>? filter = null);
+    Task<RoleDto?> GetOne(Expression<Func<Role, bool>> filter);
     Task<RoleDto?> Update(RoleDto roleDto);
     Task<bool> Delete(int id);
 }

@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 
 using AutoMapper;
-
+using PruebaViamaticaBackend.Constants;
 using PruebaViamaticaBackend.Models;
 using PruebaViamaticaBackend.Models.Dtos.Person;
 using PruebaViamaticaBackend.Repository.Interfaces;
@@ -34,12 +34,10 @@ public class PersonService : IPersonService
             Person person = _mapper.Map<Person>(personCreateDto);
 
             person.User!.Mail = $"{person.Names.ToLower().First()}{person.Surnames.ToLower().Split(" ")[0]}{person.Surnames.ToLower().Split(" ")[1].First()}@mail.com";
-            person.User!.Status = "ACTIVATED";
+            person.User!.Status = Status.Active;
 
-            // Person person = await _repository.Create(model);
             int? idPerson = await _repository.Create(person);
 
-            // return _mapper.Map<PersonDto>(person);
             return idPerson;
         }
         catch (Exception)
@@ -72,7 +70,7 @@ public class PersonService : IPersonService
         }
     }
 
-    public async Task<PersonDto?> GetOne(Expression<Func<Person, bool>>? filter = null)
+    public async Task<PersonDto?> GetOne(Expression<Func<Person, bool>> filter)
     {
         _logger.LogInformation("Executing Service class - GetOne method");
 
@@ -92,26 +90,24 @@ public class PersonService : IPersonService
         }
     }
 
-    public async Task<PersonDto?> Update(PersonDto personDto)
+    public async Task<PersonDto?> Update(PersonUpdateDto personUpdateDto)
     {
         _logger.LogInformation("Executing Service class - Update method");
 
         try
         {
-            PersonDto? personFound = await this.GetOne(person => person.Id == personDto.Id);
+            PersonDto? personFound = await GetOne(person => person.Id == personUpdateDto.Id);
 
             if (personFound == null)
             {
                 return null;
             }
 
-            Person person = _mapper.Map<Person>(personDto);
+            Person person = _mapper.Map<Person>(personUpdateDto);
 
             Person personUpdated = await _repository.Update(person);
 
-            PersonDto personDtoUpdated = _mapper.Map<PersonDto>(personUpdated);
-
-            return personDtoUpdated;
+            return _mapper.Map<PersonDto>(personUpdated);
         }
         catch (Exception)
         {

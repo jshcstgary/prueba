@@ -2,8 +2,8 @@ using System.Linq.Expressions;
 
 using AutoMapper;
 
+using PruebaViamaticaBackend.Constants;
 using PruebaViamaticaBackend.Models;
-using PruebaViamaticaBackend.Models.Dtos.Role;
 using PruebaViamaticaBackend.Models.Dtos.RoleOption;
 using PruebaViamaticaBackend.Repository.Interfaces;
 using PruebaViamaticaBackend.Services.Interfaces;
@@ -31,11 +31,13 @@ public class RoleOptionService : IRoleOptionService
 
         try
         {
-            RoleOption model = _mapper.Map<RoleOption>(roleOptionCreateDto);
+            RoleOption roleOption = _mapper.Map<RoleOption>(roleOptionCreateDto);
 
-            RoleOption roleOption = await _repository.Create(model);
+            roleOption.Status = Status.Active;
 
-            return _mapper.Map<RoleOptionDto>(roleOption);
+            RoleOption newRoleOption = await _repository.Create(roleOption);
+
+            return _mapper.Map<RoleOptionDto>(newRoleOption);
         }
         catch (Exception)
         {
@@ -67,7 +69,7 @@ public class RoleOptionService : IRoleOptionService
         }
     }
 
-    public async Task<RoleOptionDto?> GetOne(Expression<Func<RoleOption, bool>>? filter = null)
+    public async Task<RoleOptionDto?> GetOne(Expression<Func<RoleOption, bool>> filter)
     {
         _logger.LogInformation("Executing Service class - GetOne method");
 
@@ -93,7 +95,7 @@ public class RoleOptionService : IRoleOptionService
 
         try
         {
-            RoleOptionDto? roleOptionFound = await this.GetOne(roleOption => roleOption.Id == roleOptionDto.Id);
+            RoleOptionDto? roleOptionFound = await GetOne(roleOption => roleOption.Id == roleOptionDto.Id);
 
             if (roleOptionFound == null)
             {
@@ -104,9 +106,7 @@ public class RoleOptionService : IRoleOptionService
 
             RoleOption roleOptionUpdated = await _repository.Update(roleOption);
 
-            RoleOptionDto roleOptionDtoUpdated = _mapper.Map<RoleOptionDto>(roleOptionUpdated);
-
-            return roleOptionDtoUpdated;
+            return _mapper.Map<RoleOptionDto>(roleOptionUpdated);
         }
         catch (Exception)
         {

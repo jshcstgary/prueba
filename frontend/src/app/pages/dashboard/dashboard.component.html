@@ -1,0 +1,17 @@
+<main>
+	<!-- <h2 class="my-10 text-4xl font-bold">Dashboard</h2> -->
+
+	<div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+		<app-tile text="Todos los usuarios" [number]="9999" />
+
+		<app-tile text="Usuarios activos" colorFrom="from-blue-500" colorTo="to-blue-300" [number]="9999" />
+
+		<app-tile text="Usuarios bloqueados" colorFrom="from-green-500" colorTo="to-green-300" [number]="9999" />
+
+		<app-tile text="Usuarios eliminados" colorFrom="from-purple-500" colorTo="to-purple-300" [number]="9999" />
+
+		<app-tile text="Usuarios con sesión activa" colorFrom="from-sky-500" colorTo="to-sky-300" [number]="9999" />
+
+		<app-tile text="Usuarios con sesión inactiva" colorFrom="from-teal-500" colorTo="to-teal-300" [number]="9999" />
+	</div>
+</main>

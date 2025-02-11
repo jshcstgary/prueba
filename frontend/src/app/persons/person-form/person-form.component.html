@@ -1,0 +1,163 @@
+<button type="button" class="btn btn-primary" aria-haspopup="dialog" aria-expanded="false" aria-controls="create-new-user-modal" data-overlay="#create-new-user-modal">Nuevo usuario</button>
+
+<div #createNewUserModal id="create-new-user-modal" class="overlay modal hidden overlay-open:opacity-100" role="dialog" tabindex="-1">
+	<div class="modal-dialog overlay-open:opacity-100">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Ingresar usuario</h3>
+
+				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" aria-label="Close" data-overlay="#create-new-user-modal">
+					<span class="icon-[tabler--x] size-4"></span>
+				</button>
+			</div>
+
+			<form class="modal-body" [formGroup]="myForm" (ngSubmit)="onSubmit()">
+				<div class="w-full">
+					<label class="label label-text" for="names"> Nombres </label>
+
+					<input
+						type="text"
+						class="input"
+						id="names"
+						formControlName="names"
+						[ngClass]="{
+							'is-invalid': !isFormValid
+						}"
+					/>
+
+					<span class="label h-3">
+						@if (!isFormValid) {
+							<span class="label-text-alt">Email o usuario incorrecto</span>
+						}
+					</span>
+				</div>
+
+				<div class="w-full">
+					<label class="label label-text" for="surnames"> Apellidos </label>
+
+					<input
+						type="text"
+						class="input"
+						id="surnames"
+						formControlName="surnames"
+						[ngClass]="{
+							'is-invalid': !isFormValid
+						}"
+					/>
+
+					<span class="label h-3">
+						@if (!isFormValid) {
+							<span class="label-text-alt">Email o usuario incorrecto</span>
+						}
+					</span>
+				</div>
+
+				<div class="w-full">
+					<label class="label label-text" for="identification"> Identificación </label>
+
+					<input
+						type="text"
+						class="input"
+						id="identification"
+						formControlName="identification"
+						[ngClass]="{
+							'is-invalid': !isFormValid
+						}"
+					/>
+
+					<span class="label h-3">
+						@if (!isFormValid) {
+							<span class="label-text-alt">Email o usuario incorrecto</span>
+						}
+					</span>
+				</div>
+
+				<div class="w-full">
+					<label class="label label-text" for="birthDate"> Fecha de nacimiento </label>
+
+					<input
+						type="text"
+						class="input"
+						id="birthDate"
+						formControlName="birthDate"
+						[ngClass]="{
+							'is-invalid': !isFormValid
+						}"
+					/>
+
+					<span class="label h-3">
+						@if (!isFormValid) {
+							<span class="label-text-alt">Email o usuario incorrecto</span>
+						}
+					</span>
+				</div>
+
+				<div formGroupName="user">
+					<div class="w-full">
+						<label class="label label-text" for="username"> Nombre de usuario </label>
+
+						<input
+							type="text"
+							class="input"
+							id="username"
+							formControlName="username"
+							[ngClass]="{
+								'is-invalid': !isFormValid
+							}"
+						/>
+
+						<span class="label h-3">
+							@if (!isFormValid) {
+								<span class="label-text-alt">Email o usuario incorrecto</span>
+							}
+						</span>
+					</div>
+
+					<div class="w-full">
+						<label class="label label-text" for="password"> Contraseña </label>
+
+						<div class="input-group">
+							<input
+								id="password"
+								type="password"
+								class="input"
+								formControlName="password"
+								value="Pwd_1242@mA1"
+								[ngClass]="{
+									'is-invalid': !isFormValid
+								}"
+							/>
+
+							<span class="input-group-text">
+								<button
+									type="button"
+									data-toggle-password='{
+						"target": "#password"
+					}'
+									class="block"
+									aria-label="password toggle"
+								>
+									<span class="icon-[tabler--eye] hidden size-5 flex-shrink-0 text-base-content/80 password-active:block"></span>
+
+									<span class="icon-[tabler--eye-off] block size-5 flex-shrink-0 text-base-content/80 password-active:hidden"></span>
+								</button>
+							</span>
+						</div>
+					</div>
+
+					<span class="label h-3">
+						@if (!isFormValid) {
+							<span class="label-text-alt">Contraseña incorrecta</span>
+						}
+					</span>
+				</div>
+
+				<div class="modal-footer">
+					<button type="reset" class="btn btn-secondary btn-soft flex-1" data-overlay="#create-new-user-modal">Cancelar</button>
+
+					<button type="submit" class="btn btn-primary flex-1">Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

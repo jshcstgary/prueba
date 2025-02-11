@@ -2,28 +2,21 @@ using System.Linq.Expressions;
 
 using AutoMapper;
 
+using PruebaViamaticaBackend.Constants;
 using PruebaViamaticaBackend.Models;
-using PruebaViamaticaBackend.Models.Dtos.Person;
 using PruebaViamaticaBackend.Models.Dtos.Role;
 using PruebaViamaticaBackend.Repository.Interfaces;
 using PruebaViamaticaBackend.Services.Interfaces;
 
 namespace PruebaViamaticaBackend.Services;
 
-public class RoleService : IRoleService
+public class RoleService(ILogger<IRoleService> logger, IRoleRepository repository, IMapper mapper) : IRoleService
 {
-    private readonly ILogger<IRoleService> _logger;
+    private readonly ILogger<IRoleService> _logger = logger;
 
-    private readonly IRoleRepository _repository;
+    private readonly IRoleRepository _repository = repository;
 
-    private readonly IMapper _mapper;
-
-    public RoleService(ILogger<IRoleService> logger, IRoleRepository repository, IMapper mapper)
-    {
-        _logger = logger;
-        _repository = repository;
-        _mapper = mapper;
-    }
+    private readonly IMapper _mapper = mapper;
 
     public async Task<RoleDto> Create(RoleCreateDto roleCreateDto)
     {
@@ -31,11 +24,13 @@ public class RoleService : IRoleService
 
         try
         {
-            Role model = _mapper.Map<Role>(roleCreateDto);
+            Role role = _mapper.Map<Role>(roleCreateDto);
 
-            Role role = await _repository.Create(model);
+            role.Status = Status.Active;
 
-            return _mapper.Map<RoleDto>(role);
+            Role newRole = await _repository.Create(role);
+
+            return _mapper.Map<RoleDto>(newRole);
         }
         catch (Exception)
         {
@@ -67,7 +62,7 @@ public class RoleService : IRoleService
         }
     }
 
-    public async Task<RoleDto?> GetOne(Expression<Func<Role, bool>>? filter = null)
+    public async Task<RoleDto?> GetOne(Expression<Func<Role, bool>> filter)
     {
         _logger.LogInformation("Executing Service class - GetOne method");
 
@@ -93,16 +88,21 @@ public class RoleService : IRoleService
 
         try
         {
-            RoleDto? roleFound = await this.GetOne(role => role.Id == roleDto.Id);
+            RoleDto? roleDtoFound = await GetOne(role => role.Id == roleDto.Id);
 
-            if (roleFound == null)
+            if (roleDtoFound == null)
             {
                 return null;
             }
 
             Role role = _mapper.Map<Role>(roleDto);
 
-            Role roleUpdated = await _repository.Update(role);
+            Role? roleUpdated = await _repository.Update(role);
+
+            if (roleUpdated == null)
+            {
+                return null;
+            }
 
             RoleDto roleDtoUpdated = _mapper.Map<RoleDto>(roleUpdated);
 

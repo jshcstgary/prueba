@@ -1,0 +1,75 @@
+<div class="flex h-screen w-full items-center justify-center border border-base-content/25 p-2">
+	<div class="card w-screen xs:max-w-96 sm:max-w-lg">
+		<div class="card-body">
+			<h5 class="card-title mb-2.5 flex justify-center">
+				<app-logo />
+			</h5>
+
+			<form class="mb-4 space-y-4" [formGroup]="myForm" (ngSubmit)="onSubmit()">
+				<div class="w-full">
+					<label class="label label-text" for="emailUsername"> Email o username </label>
+
+					<input
+						type="text"
+						class="input"
+						id="emailUsername"
+						formControlName="emailUsername"
+						value="JoshCast"
+						[ngClass]="{
+							'is-invalid': !isFormValid
+						}"
+					/>
+
+					<span class="label h-3">
+						@if (!isFormValid) {
+							<span class="label-text-alt">Email o usuario incorrecto</span>
+						}
+					</span>
+				</div>
+
+				<div class="w-full">
+					<label class="label label-text" for="password"> Contraseña </label>
+
+					<div class="input-group">
+						<input
+							id="password"
+							type="password"
+							class="input"
+							formControlName="password"
+							value="Pwd_1242@mA1"
+							[ngClass]="{
+								'is-invalid': !isFormValid
+							}"
+						/>
+
+						<span class="input-group-text">
+							<button
+								type="button"
+								data-toggle-password='{
+									"target": "#password"
+								}'
+								class="block"
+								aria-label="password toggle"
+							>
+								<span class="icon-[tabler--eye] hidden size-5 flex-shrink-0 text-base-content/80 password-active:block"></span>
+
+								<span class="icon-[tabler--eye-off] block size-5 flex-shrink-0 text-base-content/80 password-active:hidden"></span>
+							</button>
+						</span>
+					</div>
+
+					<span class="label h-3">
+						@if (!isFormValid) {
+							<span class="label-text-alt">Contraseña incorrecta</span>
+						}
+					</span>
+				</div>
+
+				<div class="card-actions mt-3">
+					<button type="submit" class="btn btn-primary w-full">Iniciar sesión</button>
+				</div>
+			</form>
+
+		</div>
+	</div>
+</div>
