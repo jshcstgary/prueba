@@ -19,7 +19,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 	private readonly ApiResponse _apiResponse = new ApiResponse();
 
-    [HttpPost(Name = "RoleController_Create")]
+	[HttpPost(Name = "RoleController_Create")]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status201Created)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
@@ -71,7 +71,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -117,7 +117,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -155,7 +155,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "ID not valid.";
+				_apiResponse.ErrorMessage = "ID no válido.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -168,7 +168,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 				_apiResponse.StatusCode = HttpStatusCode.NotFound;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Data not found.";
+				_apiResponse.ErrorMessage = "Registro no encontrado.";
 
 				return NotFound(_apiResponse);
 			}
@@ -187,7 +187,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -257,7 +257,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -295,7 +295,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "ID not valid.";
+				_apiResponse.ErrorMessage = "ID no válido.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -308,7 +308,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 				_apiResponse.StatusCode = HttpStatusCode.NotFound;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Data not found.";
+				_apiResponse.ErrorMessage = "Registro no encontrado.";
 
 				return NotFound(_apiResponse);
 			}
@@ -326,7 +326,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}

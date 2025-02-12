@@ -11,138 +11,143 @@ namespace PruebaViamaticaBackend.Services;
 
 public class PersonService : IPersonService
 {
-    private readonly ILogger<IPersonService> _logger;
+	private readonly ILogger<IPersonService> _logger;
 
-    private readonly IPersonRepository _repository;
+	private readonly IPersonRepository _repository;
 
-    private readonly IMapper _mapper;
+	private readonly IMapper _mapper;
 
-    public PersonService(ILogger<IPersonService> logger, IPersonRepository repository, IMapper mapper)
-    {
-        _logger = logger;
-        _repository = repository;
-        _mapper = mapper;
-    }
+	public PersonService(ILogger<IPersonService> logger, IPersonRepository repository, IMapper mapper)
+	{
+		_logger = logger;
+		_repository = repository;
+		_mapper = mapper;
+	}
 
-    // public async Task<PersonDto> Create(PersonCreateDto personCreateDto)
-    public async Task<int?> Create(PersonCreateDto personCreateDto)
-    {
-        _logger.LogInformation("Executing Service class - Create method");
+	// public async Task<PersonDto> Create(PersonCreateDto personCreateDto)
+	public async Task<PersonDto> Create(PersonCreateDto personCreateDto)
+	{
+		_logger.LogInformation("Executing Service class - Create method");
 
-        try
-        {
-            Person person = _mapper.Map<Person>(personCreateDto);
+		try
+		{
+			Person person = _mapper.Map<Person>(personCreateDto);
 
-            person.User!.Mail = $"{person.Names.ToLower().First()}{person.Surnames.ToLower().Split(" ")[0]}{person.Surnames.ToLower().Split(" ")[1].First()}@mail.com";
-            person.User!.Status = Status.Active;
+			person.User!.Mail = $"{person.Names.ToLower().First()}{person.Surnames.ToLower().Split(" ")[0]}{person.Surnames.ToLower().Split(" ")[1].First()}@mail.com";
+			person.User!.Status = Status.Active;
+			person.User!.SessionActive = SessionStatus.Inactive;
 
-            int? idPerson = await _repository.Create(person);
+			// int? idPerson = await _repository.Create(person);
+			Person newPerson = await _repository.Create(person);
 
-            return idPerson;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-        finally
-        {
-            _logger.LogInformation("Leaving Service class - Create method");
-        }
-    }
+			PersonDto personDto = _mapper.Map<PersonDto>(newPerson);
 
-    public async Task<IEnumerable<PersonDto>> GetAll(Expression<Func<Person, bool>>? filter = null)
-    {
-        _logger.LogInformation("Executing Service class - GetAll method");
+			// return idPerson;
+			return personDto;
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving Service class - Create method");
+		}
+	}
 
-        try
-        {
-            IEnumerable<Person> persons = await _repository.GetAll(filter);
+	public async Task<IEnumerable<PersonDto>> GetAll(Expression<Func<Person, bool>>? filter = null)
+	{
+		_logger.LogInformation("Executing Service class - GetAll method");
 
-            return _mapper.Map<IEnumerable<PersonDto>>(persons);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-        finally
-        {
-            _logger.LogInformation("Leaving Service class - GetAll method");
-        }
-    }
+		try
+		{
+			IEnumerable<Person> persons = await _repository.GetAll(filter);
 
-    public async Task<PersonDto?> GetOne(Expression<Func<Person, bool>> filter)
-    {
-        _logger.LogInformation("Executing Service class - GetOne method");
+			return _mapper.Map<IEnumerable<PersonDto>>(persons);
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving Service class - GetAll method");
+		}
+	}
 
-        try
-        {
-            Person? person = await _repository.GetOne(filter);
+	public async Task<PersonDto?> GetOne(Expression<Func<Person, bool>> filter)
+	{
+		_logger.LogInformation("Executing Service class - GetOne method");
 
-            return _mapper.Map<PersonDto>(person);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-        finally
-        {
-            _logger.LogInformation("Leaving Service class - GetOne method");
-        }
-    }
+		try
+		{
+			Person? person = await _repository.GetOne(filter);
 
-    public async Task<PersonDto?> Update(PersonUpdateDto personUpdateDto)
-    {
-        _logger.LogInformation("Executing Service class - Update method");
+			return _mapper.Map<PersonDto>(person);
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving Service class - GetOne method");
+		}
+	}
 
-        try
-        {
-            PersonDto? personFound = await GetOne(person => person.Id == personUpdateDto.Id);
+	public async Task<PersonDto?> Update(PersonUpdateDto personUpdateDto)
+	{
+		_logger.LogInformation("Executing Service class - Update method");
 
-            if (personFound == null)
-            {
-                return null;
-            }
+		try
+		{
+			PersonDto? personFound = await GetOne(person => person.Id == personUpdateDto.Id);
 
-            Person person = _mapper.Map<Person>(personUpdateDto);
+			if (personFound == null)
+			{
+				return null;
+			}
 
-            Person personUpdated = await _repository.Update(person);
+			Person person = _mapper.Map<Person>(personUpdateDto);
 
-            return _mapper.Map<PersonDto>(personUpdated);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-        finally
-        {
-            _logger.LogInformation("Leaving Service class - Update method");
-        }
-    }
+			Person personUpdated = await _repository.Update(person);
 
-    public async Task<bool> Delete(int id)
-    {
-        _logger.LogInformation("Executing Service class - Delete method");
+			return _mapper.Map<PersonDto>(personUpdated);
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving Service class - Update method");
+		}
+	}
 
-        try
-        {
-            Person? person = await _repository.GetOne(person => person.Id == id);
+	public async Task<bool> Delete(int id)
+	{
+		_logger.LogInformation("Executing Service class - Delete method");
 
-            if (person == null)
-            {
-                return false;
-            }
+		try
+		{
+			Person? person = await _repository.GetOne(person => person.Id == id);
 
-            await _repository.Delete(person!);
+			if (person == null)
+			{
+				return false;
+			}
 
-            return true;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-        finally
-        {
-            _logger.LogInformation("Leaving Service class - Delete method");
-        }
-    }
+			await _repository.Delete(person!);
+
+			return true;
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving Service class - Delete method");
+		}
+	}
 }

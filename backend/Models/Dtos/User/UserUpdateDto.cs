@@ -15,11 +15,11 @@ public class UserUpdateDto
 	[MaxLength(120)]
 	public string Mail { get; set; } = null!;
 
-	[Required]
-	[MaxLength(60)]
-	[MinLength(8)]
-	[RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_])(?=\S).*", ErrorMessage = "The field Password must contain at least one uppercase letter, a special sign and no spaces.")]
-	public string Password { get; set; } = null!;
+	// [Required]
+	// [MaxLength(50)]
+	// [MinLength(8)]
+	// [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_])(?=\S).*", ErrorMessage = "The field Password must contain at least one uppercase letter, a special sign and no spaces.")]
+	// public string Password { get; set; } = null!;
 
 	[Required]
 	public bool SessionActive { get; set; }

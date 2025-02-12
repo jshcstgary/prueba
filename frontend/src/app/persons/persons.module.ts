@@ -6,8 +6,10 @@ import { PersonsRoutingModule } from "./persons-routing.module";
 
 import { ListComponent, PersonFormComponent } from "@persons";
 
+import { ConfirmationModalComponent } from "@components";
+
 @NgModule({
 	declarations: [ListComponent, PersonFormComponent],
-	imports: [CommonModule, ReactiveFormsModule, PersonsRoutingModule]
+	imports: [CommonModule, ReactiveFormsModule, ConfirmationModalComponent, PersonsRoutingModule]
 })
 export class PersonsModule {}

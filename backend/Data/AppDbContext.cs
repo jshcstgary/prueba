@@ -93,7 +93,7 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 						j.IndexerProperty<int>("IdRoleOption").HasColumnName("id_role_option");
 					});
 
-			entity.HasMany(d => d.Users).WithMany(p => p.IdRoles)
+			entity.HasMany(d => d.Users).WithMany(p => p.Roles)
 				.UsingEntity<Dictionary<string, object>>(
 					"RolesUser",
 					r => r.HasOne<User>().WithMany()

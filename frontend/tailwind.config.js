@@ -3,7 +3,7 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
-	content: ["./node_modules/flyonui/dist/js/*.js", "./src/**/*.{html,ts}"],
+	content: ["./node_modules/flyonui/dist/js/*.js", "./node_modules/notyf/notyf.min.js", "./src/**/*.{html,ts}"],
 	theme: {
 		screens: {
 			xs: "375px",
@@ -13,6 +13,7 @@ module.exports = {
 	},
 	plugins: [require("flyonui"), require("flyonui/plugin")],
 	flyonui: {
-		themes: ["light"]
+		themes: ["light"],
+		vendors: true
 	}
 };

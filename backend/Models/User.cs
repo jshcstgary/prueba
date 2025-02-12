@@ -20,5 +20,5 @@ public partial class User
 
 	public virtual ICollection<Session> Sessions { get; set; } = [];
 
-	public virtual ICollection<Role> IdRoles { get; set; } = [];
+	public virtual ICollection<Role> Roles { get; set; } = [];
 }

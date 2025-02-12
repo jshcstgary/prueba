@@ -11,7 +11,7 @@ public class UserCreateDto
     public string Username { get; set; } = null!;
 
     [Required]
-    [MaxLength(60)]
+    [MaxLength(50)]
     [MinLength(8)]
     [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_])(?=\S).*", ErrorMessage = "The field Password must contain at least one uppercase letter, a special sign and no spaces.")]
     public string Password { get; set; } = null!;

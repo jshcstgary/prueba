@@ -1,91 +1,103 @@
-<app-person-form (onClose)="close()" />
+<div class="flex items-center justify-end">
+	<button type="button" class="--prevent-on-load-init btn btn-success mb-5" aria-haspopup="dialog" aria-expanded="false" aria-controls="peson-form-modal" (click)="openPersonFormModal(null)">Nuevo usuario</button>
+</div>
 
-<div class="w-full rounded-lg border border-base-content/25">
-	<div class="overflow-x-auto">
-		<table class="table rounded">
-			<thead>
-				<tr class="border-0 bg-base-300">
-					<th class="rounded-s-lg">
-						<input type="checkbox" class="checkbox checkbox-primary checkbox-sm" aria-label="product" [disabled]="users().length === 0" />
-					</th>
-
-					<th>Identificación</th>
-
-					<th>Nombres</th>
-
-					<th>Apellidos</th>
-
-					<th>Nombre de usuario</th>
-
-					<th>Correo</th>
-
-					<th>Rol</th>
-
-					<th>Sessión activa</th>
-
-					<th>Estado</th>
-
-					<th class="rounded-e-lg">Acciones</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				@for (user of users(); track user.identification) {
-					<tr class="hover">
-						<th>
-							<label>
-								<input type="checkbox" class="checkbox checkbox-primary checkbox-sm" aria-label="product" />
-							</label>
+@if (isLoading()) {
+	<div class="skeleton skeleton-animated h-96 w-full"></div>
+} @else {
+	<div class="w-full rounded-lg border border-base-content/25">
+		<div class="overflow-x-auto">
+			<table class="table rounded">
+				<thead>
+					<tr class="border-0 bg-base-300">
+						<th class="rounded-s-lg">
+							<input type="checkbox" class="checkbox checkbox-primary checkbox-sm" aria-label="product" [disabled]="persons().length === 0" />
 						</th>
 
-						<td class="text-nowrap">{{ user.identification }}</td>
+						<th>Identificación</th>
 
-						<td>{{ user.names }}</td>
+						<th>Nombres</th>
 
-						<td>{{ user.surnames }}</td>
+						<th>Apellidos</th>
 
-						<td>{{ user.username }}</td>
+						<th>Nombre de usuario</th>
 
-						<td>{{ user.email }}</td>
+						<th>Correo</th>
 
-						<td>{{ user.email }}</td>
+						<th>Rol</th>
 
-						<td>
-							@if (user.sessionActive) {
-								<span class="badge badge-success badge-soft text-xs">ACTIVO</span>
-							} @else {
-								<span class="badge badge-neutral badge-soft text-xs">INACTIVO</span>
-							}
-						</td>
+						<th>Sessión activa</th>
 
-						<td>
-							@switch (user.status) {
-								@case ("ACTIVE") {
+						<th>Estado</th>
+
+						<th class="rounded-e-lg">Acciones</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					@for (person of persons(); track $index) {
+						<tr class="hover">
+							<th>
+								<label>
+									<input type="checkbox" class="checkbox checkbox-primary checkbox-sm" aria-label="product" />
+								</label>
+							</th>
+
+							<td class="text-nowrap">{{ person.identification }}</td>
+
+							<td>{{ person.names }}</td>
+
+							<td>{{ person.surnames }}</td>
+
+							<td>{{ person.user.username }}</td>
+
+							<td>{{ person.user.mail }}</td>
+
+							<td>{{ person.user.mail }}</td>
+
+							<td>
+								@if (person.user.sessionActive) {
 									<span class="badge badge-success badge-soft text-xs">ACTIVO</span>
+								} @else {
+									<span class="badge badge-neutral badge-soft text-xs">INACTIVO</span>
 								}
-								@case ("LOCK") {
-									<span class="badge badge-warning badge-soft text-xs">BLOQUEADO</span>
+							</td>
+
+							<td>
+								@switch (person.user.status) {
+									@case (status.Active) {
+										<span class="badge badge-success badge-soft text-xs">ACTIVO</span>
+									}
+									@case (status.Lock) {
+										<span class="badge badge-warning badge-soft text-xs">BLOQUEADO</span>
+									}
+									@case (status.Delete) {
+										<span class="badge badge-error badge-soft text-xs">ELIMINADO</span>
+									}
 								}
-								@case ("DELETE") {
-									<span class="badge badge-error badge-soft text-xs">ELIMINADO</span>
+							</td>
+
+							<td>
+								<button type="button" class="btn btn-circle btn-warning btn-text btn-sm" (click)="openPersonFormModal(person.id)"><span class="icon-[tabler--pencil] size-5"></span></button>
+
+								@if (person.user.status !== status.Delete) {
+									<button type="button" class="btn btn-circle btn-error btn-text btn-sm" aria-label="Action button" (click)="openDeletePersonModal(person.id)"><span class="icon-[tabler--trash] size-5"></span></button>
 								}
-							}
-						</td>
-
-						<td>
-							<button type="button" class="btn btn-circle btn-text btn-sm" aria-label="Action button"><span class="icon-[tabler--pencil] size-5"></span></button>
-
-							<button type="button" class="btn btn-circle btn-text btn-sm" aria-label="Action button"><span class="icon-[tabler--trash] size-5"></span></button>
-
-							<button type="button" class="btn btn-circle btn-text btn-sm" aria-label="Action button"><span class="icon-[tabler--dots-vertical] size-5"></span></button>
-						</td>
-					</tr>
-				} @empty {
-					<tr>
-						<td colspan="9" class="h-20 text-center">No existen registros.</td>
-					</tr>
-				}
-			</tbody>
-		</table>
+							</td>
+						</tr>
+					} @empty {
+						<tr>
+							<td colspan="9" class="h-20 text-center">No se encontraron registros.</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
 	</div>
-</div>
+}
+
+<app-person-form #personFormModal (onClose)="onClosePersonForm($event)" />
+<!-- <div #personFormModal id="peson-form-modal" class="overlay modal hidden [--tab-accessibility-limited:false] overlay-open:opacity-100" role="dialog" tabindex="-1">
+</div> -->
+
+<app-confirmation-modal #deletePersonModal (onConfirmation)="onConfirmation($event)" />

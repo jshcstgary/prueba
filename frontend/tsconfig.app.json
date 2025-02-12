@@ -7,7 +7,11 @@
 		"paths": {
 			"@auth": ["src/app/auth"],
 			"@components": ["src/app/components"],
+			"@constants": ["src/app/constants"],
+			"@dev-environments": ["src/environments/environment.development.ts"],
+			"@environments": ["src/environments/environment.ts"],
 			"@layouts": ["src/app/layouts"],
+			"@lib": ["src/app/lib"],
 			"@pages": ["src/app/pages"],
 			"@persons": ["src/app/persons"],
 			"@services": ["src/app/services"],

@@ -20,7 +20,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 	private readonly ApiResponse _apiResponse = new ApiResponse();
 
-    [HttpPost(Name = "PersonController_Create")]
+	[HttpPost(Name = "PersonController_Create")]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status201Created)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
@@ -64,34 +64,16 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 				return BadRequest(_apiResponse);
 			}
 
-			int? idPerson = await _service.Create(personCreateDto);
-
-			if (idPerson == null)
-			{
-				_logger.LogError($"PersonController class - Create method - Could not save");
-
-				_apiResponse.StatusCode = HttpStatusCode.InternalServerError;
-				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Could not save";
-
-				return StatusCode(StatusCodes.Status500InternalServerError, _apiResponse);
-			}
+			// int? idPerson = await _service.Create(personCreateDto);
+			PersonDto personDto = await _service.Create(personCreateDto);
 
 			_logger.LogInformation("Data created successfully.");
 
 			_apiResponse.StatusCode = HttpStatusCode.Created;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			// _apiResponse.Data = personDto;
-			_apiResponse.Data = new
-			{
-				idPerson = idPerson
-			};
+			_apiResponse.Data = personDto;
 
-			return CreatedAtRoute("PersonController_GetById", new
-			{
-				// id = personDto.Id
-				id = idPerson
-			}, _apiResponse);
+			return CreatedAtRoute("PersonController_GetById", personDto, _apiResponse);
 		}
 		catch (RetryLimitExceededException ex)
 		{
@@ -99,7 +81,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -109,7 +91,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.InternalServerError;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = ex.Message;
+			_apiResponse.ErrorMessage = "Falla interna, acción no completada.";
 
 			return StatusCode(StatusCodes.Status500InternalServerError, _apiResponse);
 		}
@@ -145,7 +127,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -155,7 +137,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.InternalServerError;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = ex.Message;
+			_apiResponse.ErrorMessage = "Falla interna, acción no completada.";
 
 			return StatusCode(StatusCodes.Status500InternalServerError, _apiResponse);
 		}
@@ -183,7 +165,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "ID not valid.";
+				_apiResponse.ErrorMessage = "ID no válido.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -196,7 +178,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 				_apiResponse.StatusCode = HttpStatusCode.NotFound;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Data not found.";
+				_apiResponse.ErrorMessage = "Registro no encontrado.";
 
 				return NotFound(_apiResponse);
 			}
@@ -215,7 +197,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -225,7 +207,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.InternalServerError;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = ex.Message;
+			_apiResponse.ErrorMessage = "Falla interna, acción no completada.";
 
 			return StatusCode(StatusCodes.Status500InternalServerError, _apiResponse);
 		}
@@ -285,7 +267,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -295,7 +277,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.InternalServerError;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = ex.Message;
+			_apiResponse.ErrorMessage = "Falla interna, acción no completada.";
 
 			return StatusCode(StatusCodes.Status500InternalServerError, _apiResponse);
 		}
@@ -323,7 +305,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "ID not valid.";
+				_apiResponse.ErrorMessage = "ID no válido.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -336,7 +318,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 				_apiResponse.StatusCode = HttpStatusCode.NotFound;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Data not found.";
+				_apiResponse.ErrorMessage = "Registro no encontrado.";
 
 				return NotFound(_apiResponse);
 			}
@@ -354,7 +336,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -364,7 +346,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 			_apiResponse.StatusCode = HttpStatusCode.InternalServerError;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = ex.Message;
+			_apiResponse.ErrorMessage = "Falla interna, acción no completada.";
 
 			return StatusCode(StatusCodes.Status500InternalServerError, _apiResponse);
 		}

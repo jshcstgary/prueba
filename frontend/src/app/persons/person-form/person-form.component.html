@@ -1,161 +1,203 @@
-<button type="button" class="btn btn-primary" aria-haspopup="dialog" aria-expanded="false" aria-controls="create-new-user-modal" data-overlay="#create-new-user-modal">Nuevo usuario</button>
-
-<div #createNewUserModal id="create-new-user-modal" class="overlay modal hidden overlay-open:opacity-100" role="dialog" tabindex="-1">
-	<div class="modal-dialog overlay-open:opacity-100">
+<div #personFormModal id="peson-form-modal" class="overlay modal hidden [--tab-accessibility-limited:false] overlay-open:opacity-100" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-sm md:modal-dialog-lg lg:modal-dialog-xl overlay-open:opacity-100">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h3 class="modal-title">Ingresar usuario</h3>
 
-				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" aria-label="Close" data-overlay="#create-new-user-modal">
+				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" aria-label="Close" (click)="close()">
 					<span class="icon-[tabler--x] size-4"></span>
 				</button>
 			</div>
 
 			<form class="modal-body" [formGroup]="myForm" (ngSubmit)="onSubmit()">
-				<div class="w-full">
-					<label class="label label-text" for="names"> Nombres </label>
+				<div class="md:flex md:gap-5">
+					<div class="md:flex-1">
+						<div class="w-full">
+							<label class="label label-text" for="names"> Nombres </label>
 
-					<input
-						type="text"
-						class="input"
-						id="names"
-						formControlName="names"
-						[ngClass]="{
-							'is-invalid': !isFormValid
-						}"
-					/>
-
-					<span class="label h-3">
-						@if (!isFormValid) {
-							<span class="label-text-alt">Email o usuario incorrecto</span>
-						}
-					</span>
-				</div>
-
-				<div class="w-full">
-					<label class="label label-text" for="surnames"> Apellidos </label>
-
-					<input
-						type="text"
-						class="input"
-						id="surnames"
-						formControlName="surnames"
-						[ngClass]="{
-							'is-invalid': !isFormValid
-						}"
-					/>
-
-					<span class="label h-3">
-						@if (!isFormValid) {
-							<span class="label-text-alt">Email o usuario incorrecto</span>
-						}
-					</span>
-				</div>
-
-				<div class="w-full">
-					<label class="label label-text" for="identification"> Identificación </label>
-
-					<input
-						type="text"
-						class="input"
-						id="identification"
-						formControlName="identification"
-						[ngClass]="{
-							'is-invalid': !isFormValid
-						}"
-					/>
-
-					<span class="label h-3">
-						@if (!isFormValid) {
-							<span class="label-text-alt">Email o usuario incorrecto</span>
-						}
-					</span>
-				</div>
-
-				<div class="w-full">
-					<label class="label label-text" for="birthDate"> Fecha de nacimiento </label>
-
-					<input
-						type="text"
-						class="input"
-						id="birthDate"
-						formControlName="birthDate"
-						[ngClass]="{
-							'is-invalid': !isFormValid
-						}"
-					/>
-
-					<span class="label h-3">
-						@if (!isFormValid) {
-							<span class="label-text-alt">Email o usuario incorrecto</span>
-						}
-					</span>
-				</div>
-
-				<div formGroupName="user">
-					<div class="w-full">
-						<label class="label label-text" for="username"> Nombre de usuario </label>
-
-						<input
-							type="text"
-							class="input"
-							id="username"
-							formControlName="username"
-							[ngClass]="{
-								'is-invalid': !isFormValid
-							}"
-						/>
-
-						<span class="label h-3">
-							@if (!isFormValid) {
-								<span class="label-text-alt">Email o usuario incorrecto</span>
-							}
-						</span>
-					</div>
-
-					<div class="w-full">
-						<label class="label label-text" for="password"> Contraseña </label>
-
-						<div class="input-group">
 							<input
-								id="password"
-								type="password"
+								type="text"
 								class="input"
-								formControlName="password"
-								value="Pwd_1242@mA1"
+								id="names"
+								formControlName="names"
 								[ngClass]="{
-									'is-invalid': !isFormValid
+									'is-invalid': showErrors() && getNamesError() !== ''
 								}"
 							/>
 
-							<span class="input-group-text">
-								<button
-									type="button"
-									data-toggle-password='{
-						"target": "#password"
-					}'
-									class="block"
-									aria-label="password toggle"
-								>
-									<span class="icon-[tabler--eye] hidden size-5 flex-shrink-0 text-base-content/80 password-active:block"></span>
+							<span class="label h-3">
+								@if (showErrors()) {
+									<span class="label-text-alt">{{ getNamesError() }}</span>
+								}
+							</span>
+						</div>
 
-									<span class="icon-[tabler--eye-off] block size-5 flex-shrink-0 text-base-content/80 password-active:hidden"></span>
-								</button>
+						<div class="w-full">
+							<label class="label label-text" for="surnames"> Apellidos </label>
+
+							<input
+								type="text"
+								class="input"
+								id="surnames"
+								formControlName="surnames"
+								[ngClass]="{
+									'is-invalid': showErrors() && getSurnamesError() !== ''
+								}"
+							/>
+
+							<span class="label h-3">
+								@if (showErrors()) {
+									<span class="label-text-alt">{{ getSurnamesError() }}</span>
+								}
+							</span>
+						</div>
+
+						<div class="w-full">
+							<label class="label label-text" for="identification"> Identificación </label>
+
+							<input
+								type="text"
+								class="input"
+								id="identification"
+								formControlName="identification"
+								placeholder="xxxxxxxxxx"
+								[ngClass]="{
+									'is-invalid': showErrors() && getIdentificationError() !== ''
+								}"
+							/>
+
+							<span class="label h-3">
+								@if (showErrors()) {
+									<span class="label-text-alt">{{ getIdentificationError() }}</span>
+								}
+							</span>
+						</div>
+
+						<div class="w-full">
+							<label class="label label-text" for="birthDate"> Fecha de nacimiento (YYYY-MM-DD) </label>
+
+							<input
+								type="text"
+								class="input"
+								id="birthDate"
+								formControlName="birthDate"
+								placeholder="YYYY-MM-DD"
+								[ngClass]="{
+									'is-invalid': showErrors() && getBirthDateError() !== ''
+								}"
+							/>
+
+							<span class="label h-3">
+								@if (showErrors()) {
+									<span class="label-text-alt">{{ getBirthDateError() }}</span>
+								}
 							</span>
 						</div>
 					</div>
 
-					<span class="label h-3">
-						@if (!isFormValid) {
-							<span class="label-text-alt">Contraseña incorrecta</span>
+					<div class="md:flex-1" formGroupName="user">
+						<div class="w-full">
+							<label class="label label-text" for="username"> Nombre de usuario </label>
+
+							<input
+								type="text"
+								class="input"
+								id="username"
+								formControlName="username"
+								[ngClass]="{
+									'is-invalid': showErrors() && getUsernameError() !== ''
+								}"
+							/>
+
+							<span class="label">
+								<span class="label-text-alt">
+									<ul class="list-disc">
+										<li>Sin caracteres especiales</li>
+
+										<li>Al menos un número</li>
+
+										<li>Al menos una letra mayúscula</li>
+
+										<li>Mínimo 8 caracteres</li>
+									</ul>
+								</span>
+							</span>
+
+							<span class="label h-3">
+								@if (showErrors()) {
+									<span class="label-text-alt">{{ getUsernameError() }}</span>
+								}
+							</span>
+						</div>
+
+						@if (idPerson() === null) {
+							<div class="w-full">
+								<label class="label label-text" for="password"> Contraseña </label>
+
+								<div class="input-group">
+									<input
+										id="password"
+										type="password"
+										class="input"
+										formControlName="password"
+										[ngClass]="{
+											'is-invalid': showErrors() && getPasswordError() !== ''
+										}"
+									/>
+
+									<span class="input-group-text">
+										<button
+											type="button"
+											data-toggle-password='{
+											"target": "#password"
+										}'
+											class="block"
+											aria-label="password toggle"
+										>
+											<span class="icon-[tabler--eye] hidden size-5 flex-shrink-0 text-base-content/80 password-active:block"></span>
+
+											<span class="icon-[tabler--eye-off] block size-5 flex-shrink-0 text-base-content/80 password-active:hidden"></span>
+										</button>
+									</span>
+								</div>
+							</div>
+
+							<span class="label">
+								<span class="label-text-alt">
+									<ul class="list-disc">
+										<li>Sin espacios</li>
+
+										<li>Al menos un caracter especial</li>
+
+										<li>Al menos un número</li>
+
+										<li>Al menos una letra mayúscula</li>
+
+										<li>Mínimo 8 caracteres</li>
+									</ul>
+								</span>
+							</span>
+
+							<span class="label h-3">
+								@if (showErrors()) {
+									<span class="label-text-alt">{{ getPasswordError() }}</span>
+								}
+							</span>
 						}
-					</span>
+					</div>
 				</div>
 
-				<div class="modal-footer">
-					<button type="reset" class="btn btn-secondary btn-soft flex-1" data-overlay="#create-new-user-modal">Cancelar</button>
+				<div class="modal-footer flex flex-col gap-5 md:flex-row">
+					<button type="reset" class="btn btn-secondary btn-soft order-2 w-full md:order-1 md:flex-1" [disabled]="isLoading()" (click)="close()"><span class="icon-[tabler--playstation-x] size-4"></span> Cancelar</button>
 
-					<button type="submit" class="btn btn-primary flex-1">Guardar</button>
+					<button type="submit" class="btn btn-primary order-1 w-full md:order-2 md:flex-1" [disabled]="isLoading()">
+						@if (isLoading()) {
+							<span class="loading loading-spinner"></span>
+						} @else {
+							<span class="icon-[tabler--send]"></span>
+						}
+						Guardar
+					</button>
 				</div>
 			</form>
 		</div>

@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 
 using PruebaViamaticaBackend.Models;
 using PruebaViamaticaBackend.Repository.Interfaces;
+using PruebaViamaticaBackend.Constants;
 
 namespace PruebaViamaticaBackend.Repository;
 
@@ -32,65 +33,64 @@ public class PersonRepository : IPersonRepository
 		await _context.SaveChangesAsync();
 	}
 
-	public async Task<int?> Create(Person person)
+	// public async Task<int?> Create(Person newPerson)
+	public async Task<Person> Create(Person newPerson)
 	{
 		_logger.LogInformation("Executing Repository class - Create method");
 
 		try
 		{
-			person.User!.SessionActive = false;
-
 			var names = new SqlParameter("@Names", System.Data.SqlDbType.NVarChar, 60)
 			{
-				Value = person.Names,
+				Value = newPerson.Names,
 				Direction = System.Data.ParameterDirection.Input
 			};
 
 			var surnames = new SqlParameter("@Surnames", System.Data.SqlDbType.NVarChar, 60)
 			{
-				Value = person.Surnames,
+				Value = newPerson.Surnames,
 				Direction = System.Data.ParameterDirection.Input
 			};
 
 			var identification = new SqlParameter("@Identification", System.Data.SqlDbType.NVarChar, 10)
 			{
-				Value = person.Identification,
+				Value = newPerson.Identification,
 				Direction = System.Data.ParameterDirection.Input
 			};
 
 			var birthDate = new SqlParameter("@BirthDate", System.Data.SqlDbType.DateTime)
 			{
-				Value = person.BirthDate,
+				Value = newPerson.BirthDate,
 				Direction = System.Data.ParameterDirection.Input
 			};
 
 			var username = new SqlParameter("@Username", System.Data.SqlDbType.NVarChar, 50)
 			{
-				Value = person.User.Username,
+				Value = newPerson.User!.Username,
 				Direction = System.Data.ParameterDirection.Input
 			};
 
 			var password = new SqlParameter("@Password", System.Data.SqlDbType.NVarChar, 50)
 			{
-				Value = person.User.Password,
+				Value = newPerson.User.Password,
 				Direction = System.Data.ParameterDirection.Input
 			};
 
 			var mail = new SqlParameter("@Mail", System.Data.SqlDbType.NVarChar, 120)
 			{
-				Value = person.User.Mail,
+				Value = newPerson.User.Mail,
 				Direction = System.Data.ParameterDirection.Input
 			};
 
 			var sessionActive = new SqlParameter("@SessionActive", System.Data.SqlDbType.Bit)
 			{
-				Value = person.User.SessionActive,
+				Value = newPerson.User.SessionActive,
 				Direction = System.Data.ParameterDirection.Input
 			};
 
 			var status = new SqlParameter("@Status", System.Data.SqlDbType.NVarChar, 20)
 			{
-				Value = person.User.Status,
+				Value = newPerson.User.Status,
 				Direction = System.Data.ParameterDirection.Input
 			};
 
@@ -99,12 +99,45 @@ public class PersonRepository : IPersonRepository
 				Direction = System.Data.ParameterDirection.Output
 			};
 
-			await _context.Database.ExecuteSqlRawAsync(
-				"EXEC INSERT_PERSON_USER @Names, @Surnames, @Identification, @BirthDate, @Username, @Password, @Mail, @SessionActive, @Status, @IdPerson OUTPUT",
-				names, surnames, identification, birthDate, username, password, mail, sessionActive, status, idPerson
+			var idUser = new SqlParameter("@IdUser", System.Data.SqlDbType.Int)
+			{
+				Direction = System.Data.ParameterDirection.Output
+			};
+
+			int rowsAffected = await _context.Database.ExecuteSqlRawAsync(
+				"EXEC INSERT_PERSON_USER @Names, @Surnames, @Identification, @BirthDate, @Username, @Password, @Mail, @SessionActive, @Status, @IdPerson OUTPUT, @IdUser OUTPUT",
+				names, surnames, identification, birthDate, username, password, mail, sessionActive, status, idPerson, idUser
 			);
 
-			return idPerson.Value != DBNull.Value ? (int?)idPerson.Value : null;
+			if (rowsAffected == 0)
+			{
+				throw new Exception("Could not insert record.");
+			}
+
+			Person person = new Person
+			{
+				Id = (int)idPerson.Value,
+				Identification = newPerson.Identification,
+				Names = newPerson.Names,
+				Surnames = newPerson.Surnames,
+				BirthDate = newPerson.BirthDate,
+				User = new User
+				{
+					Id = (int)idUser.Value,
+					Username = newPerson.User!.Username,
+					Password = newPerson.User.Password,
+					Mail = newPerson.User.Mail,
+					Status = newPerson.User.Status,
+					SessionActive = newPerson.User.SessionActive,
+					IdNavigation = newPerson.User.IdNavigation,
+					IdPerson = newPerson.User.IdPerson,
+					Roles = newPerson.User.Roles,
+					Sessions = newPerson.User.Sessions
+				}
+			};
+
+			// return idPerson.Value != DBNull.Value ? (int?)idPerson.Value : null;
+			return person;
 		}
 		catch (SqlException ex)
 		{
@@ -112,24 +145,24 @@ public class PersonRepository : IPersonRepository
 			{
 				_logger.LogError($"PersonRepository class - Create method - {ex.Message}");
 
-				throw new Exception("The identification number already exists in the system.");
+				throw new Exception("El número de identificación ya existe en el sistema.");
 			}
 			else if (ex.Number == 50002)
 			{
 				_logger.LogError($"PersonRepository class - Create method - {ex.Message}");
 
-				throw new Exception("The username already exists in the system.");
+				throw new Exception("El nombre de usuario ya existe en el sistema.");
 			}
 			else
 			{
 				_logger.LogError($"PersonRepository class - Create method - {ex.Message}");
 
-				throw new Exception("An error occurred while processing the  request.");
+				throw new Exception("Un error ocurrió durante la inserción.");
 			}
 		}
 		catch (Exception)
 		{
-			throw new Exception("An error occurred while processing the  request.");
+			throw new Exception("Un error ocurrió durante la inserción.");
 		}
 		finally
 		{
@@ -259,13 +292,13 @@ public class PersonRepository : IPersonRepository
 			{
 				_logger.LogError($"PersonRepository class - Create method - {ex.Message}");
 
-				throw new Exception("The username already exists in the system.");
+				throw new Exception("El nombre de usuario ya existe en el sistema.");
 			}
 			else
 			{
 				_logger.LogError($"PersonRepository class - Create method - {ex.Message}");
 
-				throw new Exception("An error occurred while processing the  request.");
+				throw new Exception("Un error ocurrió durante la inserción.");
 			}
 		}
 		catch (Exception)
@@ -284,7 +317,9 @@ public class PersonRepository : IPersonRepository
 
 		try
 		{
-			dbSet.Remove(person);
+			person.User!.Status = Status.Delete;
+
+			_context.Update(person);
 
 			await Save();
 		}

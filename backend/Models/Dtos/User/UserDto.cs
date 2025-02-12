@@ -8,7 +8,7 @@ public class UserDto
 	public int Id { get; set; }
 
 	[Required]
-	[MaxLength(60)]
+	[MaxLength(20)]
 	public string Username { get; set; } = null!;
 
 	[Required]

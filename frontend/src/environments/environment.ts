@@ -1,3 +1,5 @@
+const apiUrl = "http://localhost:5154";
+
 export const environment = {
-	apiUrl: "http://localhost:5154"
+	personUrl: `${apiUrl}/api/person`
 };

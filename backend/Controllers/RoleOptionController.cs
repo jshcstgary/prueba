@@ -20,7 +20,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 	private readonly ApiResponse _apiResponse = new ApiResponse();
 
-    [HttpPost(Name = "RoleOptionController_Create")]
+	[HttpPost(Name = "RoleOptionController_Create")]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status201Created)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
@@ -72,7 +72,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -118,7 +118,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -156,7 +156,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "ID not valid.";
+				_apiResponse.ErrorMessage = "ID no válido.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -169,7 +169,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 				_apiResponse.StatusCode = HttpStatusCode.NotFound;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Data not found.";
+				_apiResponse.ErrorMessage = "Registro no encontrado.";
 
 				return NotFound(_apiResponse);
 			}
@@ -188,7 +188,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -258,7 +258,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
@@ -296,7 +296,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "ID not valid.";
+				_apiResponse.ErrorMessage = "ID no válido.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -309,7 +309,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 				_apiResponse.StatusCode = HttpStatusCode.NotFound;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Data not found.";
+				_apiResponse.ErrorMessage = "Registro no encontrado.";
 
 				return NotFound(_apiResponse);
 			}
@@ -327,7 +327,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.ErrorMessage = "Timeout";
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
 
 			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
 		}
