@@ -147,6 +147,52 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 		}
 	}
 
+	[HttpGet("count", Name = "PersonController_GetCount")]
+	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
+	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
+	public async Task<ActionResult<ApiResponse>> GetCount()
+	{
+		_logger.LogInformation("Executing PersonController class - GetCount method");
+
+		try
+		{
+			IEnumerable<PersonCount> personCount = await _service.GetCount();
+
+			_logger.LogInformation("PersonController class - GetCount method - Data retrieved");
+
+			_apiResponse.StatusCode = HttpStatusCode.OK;
+			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
+			_apiResponse.Data = personCount;
+
+			return Ok(_apiResponse);
+		}
+		catch (RetryLimitExceededException ex)
+		{
+			_logger.LogError($"PersonController class - GetCount method - {ex.ToString()}");
+
+			_apiResponse.StatusCode = HttpStatusCode.RequestTimeout;
+			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
+			_apiResponse.ErrorMessage = "Tiempo de espera excedido";
+
+			return StatusCode(StatusCodes.Status408RequestTimeout, _apiResponse);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"PersonController class - GetCount method - {ex.ToString()}");
+
+			_apiResponse.StatusCode = HttpStatusCode.InternalServerError;
+			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
+			_apiResponse.ErrorMessage = "Falla interna, acción no completada.";
+
+			return StatusCode(StatusCodes.Status500InternalServerError, _apiResponse);
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving PersonController class - GetCount method");
+		}
+	}
+
 	[HttpGet("{id}", Name = "PersonController_GetById")]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]

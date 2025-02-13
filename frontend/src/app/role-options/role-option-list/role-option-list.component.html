@@ -1,0 +1,58 @@
+<div class="flex items-center justify-end">
+	<button type="button" class="--prevent-on-load-init btn btn-success mb-5" aria-haspopup="dialog" aria-expanded="false" aria-controls="role-form-modal" (click)="openRoleOptionFormModal(null)">Nueva opción del rol</button>
+</div>
+
+@if (isLoading()) {
+	<div class="skeleton skeleton-animated h-96 w-full"></div>
+} @else {
+	<div class="w-full rounded-lg border border-base-content/25">
+		<div class="overflow-x-auto">
+			<table class="table rounded">
+				<thead>
+					<tr class="border-0 bg-base-300">
+						<th>Nombre</th>
+
+						<th>Estado</th>
+
+						<th class="rounded-e-lg">Acciones</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					@for (roleOption of roleOptions(); track $index) {
+						<tr class="hover">
+							<td class="text-nowrap">{{ roleOption.name }}</td>
+
+							<td>
+								@switch (roleOption.status) {
+									@case (status.Active) {
+										<span class="badge badge-success badge-soft text-xs">ACTIVO</span>
+									}
+									@case (status.Delete) {
+										<span class="badge badge-error badge-soft text-xs">ELIMINADO</span>
+									}
+								}
+							</td>
+
+							<td>
+								<button type="button" class="btn btn-circle btn-warning btn-text btn-sm" (click)="openRoleOptionFormModal(roleOption.id)"><span class="icon-[tabler--pencil] size-5"></span></button>
+
+								@if (roleOption.status !== status.Delete) {
+									<button type="button" class="btn btn-circle btn-error btn-text btn-sm" aria-label="Action button" (click)="openDeleteRoleOptionModal(roleOption.id)"><span class="icon-[tabler--trash] size-5"></span></button>
+								}
+							</td>
+						</tr>
+					} @empty {
+						<tr>
+							<td colspan="9" class="h-20 text-center">No se encontraron registros.</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+}
+
+<app-role-option-form #roleOptionFormModal (onClose)="onCloseRoleOptionForm($event)" />
+
+<app-confirmation-modal #deleteRoleOptionModal (onConfirmation)="onConfirmation($event)" />

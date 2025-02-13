@@ -26,3 +26,8 @@ export type User = Omit<UserCreate, "password"> & {
 	sessionActive: boolean;
 	status: string;
 };
+
+export type PersonCount = {
+	label: string;
+	amount: number;
+};

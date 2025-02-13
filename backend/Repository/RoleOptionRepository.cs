@@ -125,7 +125,7 @@ public class RoleOptionRepository : IRoleOptionRepository
 
 		try
 		{
-			dbSet.Remove(roleOption);
+			_context.Update(roleOption);
 
 			await Save();
 		}

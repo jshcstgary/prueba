@@ -1,9 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
-import { PagesRoutingModule } from "./pages-routing.module";
-
-import { DashboardComponent, HomeComponent, TileComponent } from "@pages";
+import { DashboardComponent, HomeComponent, PagesRoutingModule, TileComponent } from "@pages";
 
 @NgModule({
 	declarations: [HomeComponent, DashboardComponent, TileComponent],

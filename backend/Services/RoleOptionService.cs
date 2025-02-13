@@ -89,20 +89,20 @@ public class RoleOptionService : IRoleOptionService
         }
     }
 
-    public async Task<RoleOptionDto?> Update(RoleOptionDto roleOptionDto)
+    public async Task<RoleOptionDto?> Update(RoleOptionUpdateDto roleOptionUpdateDto)
     {
         _logger.LogInformation("Executing Service class - Update method");
 
         try
         {
-            RoleOptionDto? roleOptionFound = await GetOne(roleOption => roleOption.Id == roleOptionDto.Id);
+            RoleOptionDto? roleOptionFound = await GetOne(roleOption => roleOption.Id == roleOptionUpdateDto.Id);
 
             if (roleOptionFound == null)
             {
                 return null;
             }
 
-            RoleOption roleOption = _mapper.Map<RoleOption>(roleOptionDto);
+            RoleOption roleOption = _mapper.Map<RoleOption>(roleOptionUpdateDto);
 
             RoleOption roleOptionUpdated = await _repository.Update(roleOption);
 
@@ -130,6 +130,8 @@ public class RoleOptionService : IRoleOptionService
             {
                 return false;
             }
+
+            roleOption.Status = Status.Delete;
 
             await _repository.Delete(roleOption!);
 

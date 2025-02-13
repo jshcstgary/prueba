@@ -1,11 +1,12 @@
 using System.Linq.Expressions;
 
 using Microsoft.EntityFrameworkCore;
+
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-
+using PruebaViamaticaBackend.Constants;
 using PruebaViamaticaBackend.Data;
-
 using PruebaViamaticaBackend.Models;
+
 using PruebaViamaticaBackend.Repository.Interfaces;
 
 namespace PruebaViamaticaBackend.Repository;
@@ -113,7 +114,7 @@ public class RoleRepository : IRoleRepository
 
 		try
 		{
-			Role? existingRole = await dbSet
+			Role? existingRole = await _context.Roles
 				.Include(role => role.RoleOptions)
 				.FirstOrDefaultAsync(r => r.Id == role.Id);
 
@@ -167,7 +168,14 @@ public class RoleRepository : IRoleRepository
 
 		try
 		{
-			dbSet.Remove(role);
+			Role? existingRole = await _context.Roles.FindAsync(role.Id);
+
+			existingRole!.Status = Status.Delete;
+
+			_context
+				.Entry(existingRole)
+				.Property(role => role.Status)
+				.IsModified = true;
 
 			await Save();
 		}

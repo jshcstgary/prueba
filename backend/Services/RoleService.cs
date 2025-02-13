@@ -131,6 +131,8 @@ public class RoleService(ILogger<IRoleService> logger, IRoleRepository repositor
                 return false;
             }
 
+            role.Status = Status.Delete;
+
             await _repository.Delete(role!);
 
             return true;

@@ -10,10 +10,6 @@
 			<table class="table rounded">
 				<thead>
 					<tr class="border-0 bg-base-300">
-						<th class="rounded-s-lg">
-							<input type="checkbox" class="checkbox checkbox-primary checkbox-sm" aria-label="product" [disabled]="persons().length === 0" />
-						</th>
-
 						<th>Identificación</th>
 
 						<th>Nombres</th>
@@ -37,12 +33,6 @@
 				<tbody>
 					@for (person of persons(); track $index) {
 						<tr class="hover">
-							<th>
-								<label>
-									<input type="checkbox" class="checkbox checkbox-primary checkbox-sm" aria-label="product" />
-								</label>
-							</th>
-
 							<td class="text-nowrap">{{ person.identification }}</td>
 
 							<td>{{ person.names }}</td>
@@ -97,7 +87,5 @@
 }
 
 <app-person-form #personFormModal (onClose)="onClosePersonForm($event)" />
-<!-- <div #personFormModal id="peson-form-modal" class="overlay modal hidden [--tab-accessibility-limited:false] overlay-open:opacity-100" role="dialog" tabindex="-1">
-</div> -->
 
 <app-confirmation-modal #deletePersonModal (onConfirmation)="onConfirmation($event)" />

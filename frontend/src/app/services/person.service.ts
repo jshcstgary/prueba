@@ -2,7 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { ApiResponse, Person, PersonCreate } from "@types";
+import { ApiResponse, Person, PersonCount, PersonCreate } from "@types";
 
 import { environment } from "@dev-environments";
 
@@ -22,12 +22,15 @@ export class PersonService {
 		return this.http.get<ApiResponse<Person[]>>(this.personUrl);
 	}
 
+	public getCount(): Observable<ApiResponse<PersonCount[]>> {
+		return this.http.get<ApiResponse<PersonCount[]>>(`${this.personUrl}/count`);
+	}
+
 	public getById(idPerson: number): Observable<ApiResponse<Person>> {
 		return this.http.get<ApiResponse<Person>>(`${this.personUrl}/${idPerson}`);
 	}
 
 	public delete(idPerson: number): Observable<ApiResponse<null>> {
 		return this.http.delete<ApiResponse<null>>(`${this.personUrl}/${idPerson}`);
-		// return this.http.get<ApiResponse<Person>>(`${this.personUrl}/1`);
 	}
 }

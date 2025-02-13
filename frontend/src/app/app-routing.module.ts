@@ -15,6 +15,14 @@ const routes: Routes = [
 			{
 				path: "users",
 				loadChildren: () => import("./persons/persons.module").then((m) => m.PersonsModule)
+			},
+			{
+				path: "roles",
+				loadChildren: () => import("./roles/roles.module").then((m) => m.RolesModule)
+			},
+			{
+				path: "role-options",
+				loadChildren: () => import("./role-options/role-options.module").then((m) => m.RoleOptionsModule)
 			}
 		]
 	},

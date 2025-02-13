@@ -1,4 +1,4 @@
-<aside id="sidebar-overlay" class="overlay drawer drawer-start hidden h-screen max-w-64 overlay-open:translate-x-0 lg:static lg:z-0 lg:h-full lg:w-52 lg:translate-x-0 lg:border-r lg:border-r-base-content/25 lg:shadow-none lg:hidden" role="dialog" tabindex="-1">
+<aside id="sidebar-overlay" class="overlay drawer drawer-start z-[101] hidden h-screen max-w-64 overlay-open:translate-x-0 lg:static lg:z-0 lg:hidden lg:h-full lg:w-52 lg:translate-x-0 lg:border-r lg:border-r-base-content/25 lg:shadow-none" role="dialog" tabindex="-1">
 	<div class="drawer-header border-b border-b-base-content/25 lg:hidden lg:border-none">
 		<app-logo />
 	</div>
@@ -15,6 +15,14 @@
 
 			<li>
 				<a data-overlay="#sidebar-overlay" [routerLink]="['/users']"> <span class="icon-[tabler--user] size-5"></span> Usuarios </a>
+			</li>
+
+			<li>
+				<a data-overlay="#sidebar-overlay" [routerLink]="['/roles']"> <span class="icon-[tabler--user] size-5"></span> Roles </a>
+			</li>
+
+			<li>
+				<a data-overlay="#sidebar-overlay" [routerLink]="['/role-options']"> <span class="icon-[tabler--user] size-5"></span> Opciones de rol </a>
 			</li>
 		</ul>
 	</div>
@@ -33,6 +41,14 @@
 
 			<li>
 				<a [routerLink]="['/users']"> <span class="icon-[tabler--user] size-5"></span> Usuarios </a>
+			</li>
+
+			<li>
+				<a [routerLink]="['/roles']"> <span class="icon-[tabler--user] size-5"></span> Roles </a>
+			</li>
+
+			<li>
+				<a [routerLink]="['/role-options']"> <span class="icon-[tabler--user] size-5"></span> Opciones de rol </a>
 			</li>
 		</ul>
 	</div>

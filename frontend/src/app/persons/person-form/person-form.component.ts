@@ -16,10 +16,7 @@ import { openToast } from "@lib";
 	templateUrl: "./person-form.component.html"
 })
 export class PersonFormComponent {
-	// public modal = viewChild<ElementRef<HTMLElement>>("personFormModal");
-	public formPersonModal = viewChild<ElementRef<HTMLElement>>("personFormModal");
-
-	public isFormValid = true;
+	public personFormModal = viewChild<ElementRef<HTMLElement>>("personFormModal");
 
 	public isLoading = signal(false);
 
@@ -33,14 +30,6 @@ export class PersonFormComponent {
 
 	@Output() readonly onClose = new EventEmitter<boolean>();
 
-	constructor() {
-		effect(() => {
-			if (this.idPerson() !== null) {
-				this.getPersonById();
-			}
-		});
-	}
-
 	public myForm = this.formBuilder.group({
 		names: ["", [Validators.required, Validators.minLength(1), Validators.maxLength(60)]],
 		surnames: ["", [Validators.required, Validators.minLength(1), Validators.maxLength(60)]],
@@ -52,8 +41,16 @@ export class PersonFormComponent {
 		})
 	});
 
+	constructor() {
+		effect(() => {
+			if (this.idPerson() !== null) {
+				this.getPersonById();
+			}
+		});
+	}
+
 	public open(): void {
-		const deletePersonModal = new HSOverlay(this.formPersonModal()!.nativeElement);
+		const deletePersonModal = new HSOverlay(this.personFormModal()!.nativeElement);
 
 		deletePersonModal.open();
 	}
@@ -209,7 +206,7 @@ export class PersonFormComponent {
 	}
 
 	public close(reload = false): void {
-		const deletePersonModal = new HSOverlay(this.formPersonModal()!.nativeElement);
+		const deletePersonModal = new HSOverlay(this.personFormModal()!.nativeElement);
 
 		deletePersonModal.close();
 

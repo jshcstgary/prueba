@@ -1,10 +1,10 @@
+using System.Linq.Expressions;
 using System.Net;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 
 using PruebaViamaticaBackend.Models;
-using PruebaViamaticaBackend.Models.Dtos.Role;
 using PruebaViamaticaBackend.Models.Dtos.RoleOption;
 using PruebaViamaticaBackend.Services.Interfaces;
 
@@ -96,13 +96,20 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
-	public async Task<ActionResult<ApiResponse>> GetAll()
+	public async Task<ActionResult<ApiResponse>> GetAll([FromQuery] string? status)
 	{
 		_logger.LogInformation("Executing RoleOptionController class - GetAll method");
 
 		try
 		{
-			IEnumerable<RoleOptionDto> personsDto = await _service.GetAll();
+			Expression<Func<RoleOption, bool>>? filter = null;
+
+			if (status != null)
+			{
+				filter = role => role.Status == status;
+			}
+
+			IEnumerable<RoleOptionDto> personsDto = await _service.GetAll(filter);
 
 			_logger.LogInformation("RoleOptionController class - GetAll method - Data retrieved");
 
@@ -214,13 +221,13 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
-	public async Task<ActionResult<ApiResponse>> Update([FromBody] RoleOptionDto roleOptionDto)
+	public async Task<ActionResult<ApiResponse>> Update([FromBody] RoleOptionUpdateDto roleOptionUpdateDto)
 	{
 		_logger.LogInformation("Executing RoleOptionController class - Update method");
 
 		try
 		{
-			if (roleOptionDto == null)
+			if (roleOptionUpdateDto == null)
 			{
 				_logger.LogError("RoleOptionController class - Update method - No data recieved.");
 
@@ -231,7 +238,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 				return BadRequest(_apiResponse);
 			}
 
-			RoleOptionDto? roleOptionUpdatedDto = await _service.Update(roleOptionDto);
+			RoleOptionDto? roleOptionUpdatedDto = await _service.Update(roleOptionUpdateDto);
 
 			if (roleOptionUpdatedDto == null)
 			{

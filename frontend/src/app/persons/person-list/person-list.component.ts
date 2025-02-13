@@ -1,6 +1,6 @@
-import { Component, ElementRef, inject, OnInit, signal, viewChild, ɵINPUT_SIGNAL_BRAND_WRITE_TYPE } from "@angular/core";
+import { Component, inject, OnInit, signal, viewChild } from "@angular/core";
 
-import { ModalService, PersonService } from "@services";
+import { PersonService } from "@services";
 
 import { PersonFormComponent } from "@persons";
 
@@ -13,11 +13,11 @@ import { openToast } from "@lib";
 import { Status } from "@constants";
 
 @Component({
-	selector: "app-list",
+	selector: "app-person-list",
 	standalone: false,
-	templateUrl: "./list.component.html"
+	templateUrl: "./person-list.component.html"
 })
-export class ListComponent implements OnInit {
+export class PersonListComponent implements OnInit {
 	public status = Status;
 
 	public persons = signal<Person[]>([]);
@@ -32,8 +32,6 @@ export class ListComponent implements OnInit {
 	public deletePersonModal = viewChild<ConfirmationModalComponent>("deletePersonModal");
 
 	private personService = inject(PersonService);
-
-	private modalService = inject<ModalService<number>>(ModalService);
 
 	ngOnInit() {
 		this.getPersons();

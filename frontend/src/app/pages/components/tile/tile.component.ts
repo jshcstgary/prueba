@@ -9,8 +9,8 @@ import { Component, input } from "@angular/core";
 	}
 })
 export class TileComponent {
-	public number = input.required<number>();
-	public text = input.required<string>();
+	public amount = input.required<number>();
+	public label = input.required<string>();
 
 	public colorFrom = input<string>("from-yellow-500");
 	public colorTo = input<string>("to-yellow-300");

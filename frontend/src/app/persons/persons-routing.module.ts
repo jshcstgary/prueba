@@ -1,12 +1,12 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { ListComponent } from "@persons";
+import { PersonListComponent } from "@persons";
 
 const routes: Routes = [
 	{
 		path: "",
-		component: ListComponent,
+		component: PersonListComponent,
 		data: {
 			title: "Usuarios"
 		}

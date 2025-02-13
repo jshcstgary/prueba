@@ -24,7 +24,6 @@ public class PersonService : IPersonService
 		_mapper = mapper;
 	}
 
-	// public async Task<PersonDto> Create(PersonCreateDto personCreateDto)
 	public async Task<PersonDto> Create(PersonCreateDto personCreateDto)
 	{
 		_logger.LogInformation("Executing Service class - Create method");
@@ -72,6 +71,24 @@ public class PersonService : IPersonService
 		finally
 		{
 			_logger.LogInformation("Leaving Service class - GetAll method");
+		}
+	}
+
+	public async Task<IEnumerable<PersonCount>> GetCount()
+	{
+		_logger.LogInformation("Executing Service class - GetCount method");
+
+		try
+		{
+			return await _repository.GetCount();
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving Service class - GetCount method");
 		}
 	}
 
@@ -136,6 +153,8 @@ public class PersonService : IPersonService
 			{
 				return false;
 			}
+
+			person.User!.Status = Status.Delete;
 
 			await _repository.Delete(person!);
 

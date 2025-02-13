@@ -1,15 +1,15 @@
 using System.Linq.Expressions;
 
+using Microsoft.Data.SqlClient;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+using PruebaViamaticaBackend.Constants;
 
 using PruebaViamaticaBackend.Data;
 
-using Microsoft.Data.SqlClient;
-
 using PruebaViamaticaBackend.Models;
 using PruebaViamaticaBackend.Repository.Interfaces;
-using PruebaViamaticaBackend.Constants;
 
 namespace PruebaViamaticaBackend.Repository;
 
@@ -33,7 +33,6 @@ public class PersonRepository : IPersonRepository
 		await _context.SaveChangesAsync();
 	}
 
-	// public async Task<int?> Create(Person newPerson)
 	public async Task<Person> Create(Person newPerson)
 	{
 		_logger.LogInformation("Executing Repository class - Create method");
@@ -198,6 +197,77 @@ public class PersonRepository : IPersonRepository
 		}
 	}
 
+	public async Task<IEnumerable<PersonCount>> GetCount()
+	{
+		_logger.LogInformation("Executing Repository class - GetCount method");
+
+		try
+		{
+			int allUsers = await _context.Persons.CountAsync();
+
+			int activeUsers = await _context.Persons
+				.Where(person => person.User!.Status == Status.Active)
+				.CountAsync();
+
+			int deletedUsers = await _context.Persons
+				.Where(person => person.User!.Status == Status.Delete)
+				.CountAsync();
+
+			int lockedUsers = await _context.Persons
+				.Where(person => person.User!.Status == Status.Lock)
+				.CountAsync();
+
+			int activeSessionUsers = await _context.Persons
+				.Where(person => person.User!.SessionActive == SessionStatus.Active)
+				.CountAsync();
+
+			int inactiveSessionUsers = await _context.Persons
+				.Where(person => person.User!.SessionActive == SessionStatus.Inactive)
+				.CountAsync();
+
+			return [
+				new PersonCount()
+				{
+					Label = "Todos los usuarios",
+					Amount = allUsers
+				},
+				new PersonCount()
+				{
+					Label = "Usuarios activos",
+					Amount = activeUsers
+				},
+				new PersonCount()
+				{
+					Label = "Usuarios bloqueados",
+					Amount = lockedUsers
+				},
+				new PersonCount()
+				{
+					Label = "Usuarios eliminados",
+					Amount = deletedUsers
+				},
+				new PersonCount()
+				{
+					Label = "Usuarios con sesión activa",
+					Amount = activeSessionUsers
+				},
+				new PersonCount()
+				{
+					Label = "Usuarios con sesión inactiva",
+					Amount = inactiveSessionUsers
+				}
+			];
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving Repository class - GetCount method");
+		}
+	}
+
 	public async Task<Person?> GetOne(Expression<Func<Person, bool>> filter)
 	{
 		_logger.LogInformation("Executing Repository class - GetOne method");
@@ -261,12 +331,6 @@ public class PersonRepository : IPersonRepository
 				Direction = System.Data.ParameterDirection.Input
 			};
 
-			var password = new SqlParameter("@Password", System.Data.SqlDbType.NVarChar, 50)
-			{
-				Value = person.User.Password,
-				Direction = System.Data.ParameterDirection.Input
-			};
-
 			var sessionActive = new SqlParameter("@SessionActive", System.Data.SqlDbType.Bit)
 			{
 				Value = person.User.SessionActive,
@@ -280,8 +344,8 @@ public class PersonRepository : IPersonRepository
 			};
 
 			int rowsAffected = await _context.Database.ExecuteSqlRawAsync(
-				"EXEC UPDATE_PERSON_USER @IdPerson, @Names, @Surnames, @BirthDate, @IdUser, @Username, @Password, @SessionActive, @Status",
-				idPerson, names, surnames, birthDate, idUser, username, password, sessionActive, status
+				"EXEC UPDATE_PERSON_USER @IdPerson, @Names, @Surnames, @BirthDate, @IdUser, @Username, @SessionActive, @Status",
+				idPerson, names, surnames, birthDate, idUser, username, sessionActive, status
 			);
 
 			return person;
@@ -317,8 +381,6 @@ public class PersonRepository : IPersonRepository
 
 		try
 		{
-			person.User!.Status = Status.Delete;
-
 			_context.Update(person);
 
 			await Save();
