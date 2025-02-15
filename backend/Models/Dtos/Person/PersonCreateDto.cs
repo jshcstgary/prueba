@@ -24,7 +24,7 @@ public class PersonCreateDto : IValidatableObject
 	public DateTime? BirthDate { get; set; } = null!;
 
 	[Required]
-	public UserCreateDto? User { get; set; } = null!;
+	public UserCreateDto User { get; set; } = null!;
 
 	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 	{

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, signal } from "@angular/core";
+import { Component, EventEmitter, input, Output } from "@angular/core";
 import { RouterModule } from "@angular/router";
 
 import { LogoComponent } from "@components";
@@ -9,11 +9,15 @@ import { LogoComponent } from "@components";
 	templateUrl: "./navbar.component.html"
 })
 export class NavbarComponent {
-	private isDrawerOpen = signal(false);
+	public isLoading = input.required<boolean>();
 
-	@Output() readonly titleChanged = new EventEmitter<boolean>();
+	public names = input.required<string>();
 
-	public openDrawer(): void {
-		this.isDrawerOpen.set(!this.isDrawerOpen());
+	public surnames = input.required<string>();
+
+	@Output() public readonly onSignOut = new EventEmitter<void>();
+
+	public signOut(): void {
+		this.onSignOut.emit();
 	}
 }

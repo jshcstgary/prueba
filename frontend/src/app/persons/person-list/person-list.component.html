@@ -1,6 +1,15 @@
-<div class="flex items-center justify-end">
-	<button type="button" class="--prevent-on-load-init btn btn-success mb-5" aria-haspopup="dialog" aria-expanded="false" aria-controls="peson-form-modal" (click)="openPersonFormModal(null)">Nuevo usuario</button>
-</div>
+@if (isLoading()) {
+	<div class="skeleton skeleton-animated mb-5 h-9 w-full"></div>
+} @else {
+	<div class="mb-5 flex flex-col items-center gap-3 sm:flex-row sm:justify-end">
+		<button type="button" class="--prevent-on-load-init btn btn-primary w-full sm:w-auto" (click)="downloadTemplate()"><span class="icon-[tabler--file-download]"></span> Descargar plantilla</button>
+
+		<input #loadPersonExcelInput type="file" hidden accept=".xlsx, .xls" class="hidden" (change)="onFileChange($event)" />
+		<button type="button" class="--prevent-on-load-init btn btn-info w-full sm:w-auto" (click)="loadPersonExcel()"><span class="icon-[tabler--file-upload]"></span> Cargar archivo</button>
+
+		<button type="button" class="--prevent-on-load-init btn btn-success w-full sm:w-auto" (click)="openPersonFormModal(null)"><span class="icon-[tabler--circle-plus]"></span> Nuevo usuario</button>
+	</div>
+}
 
 @if (isLoading()) {
 	<div class="skeleton skeleton-animated h-96 w-full"></div>
@@ -20,7 +29,7 @@
 
 						<th>Correo</th>
 
-						<th>Rol</th>
+						<th>Roles</th>
 
 						<th>Sessión activa</th>
 
@@ -43,7 +52,13 @@
 
 							<td>{{ person.user.mail }}</td>
 
-							<td>{{ person.user.mail }}</td>
+							<td class="text-nowrap">
+								<ul class="w-52 divide-y divide-base-content/25 rounded-md border border-base-content/25 *:p-3 first:*:rounded-t-md last:*:rounded-b-md">
+									@for (role of person.user.roles; track $index) {
+										<li>{{ role.name }}</li>
+									}
+								</ul>
+							</td>
 
 							<td>
 								@if (person.user.sessionActive) {
@@ -68,11 +83,9 @@
 							</td>
 
 							<td>
-								<button type="button" class="btn btn-circle btn-warning btn-text btn-sm" (click)="openPersonFormModal(person.id)"><span class="icon-[tabler--pencil] size-5"></span></button>
+								<button type="button" class="btn btn-circle btn-warning btn-text btn-sm" [disabled]="checkAdmin(person.user.roles)" (click)="openPersonFormModal(person.id)"><span class="icon-[tabler--pencil] size-5"></span></button>
 
-								@if (person.user.status !== status.Delete) {
-									<button type="button" class="btn btn-circle btn-error btn-text btn-sm" aria-label="Action button" (click)="openDeletePersonModal(person.id)"><span class="icon-[tabler--trash] size-5"></span></button>
-								}
+								<button type="button" class="btn btn-circle btn-error btn-text btn-sm" aria-label="Action button" [disabled]="person.user.status === status.Delete || checkAdmin(person.user.roles)" (click)="openDeletePersonModal(person.id)"><span class="icon-[tabler--trash] size-5"></span></button>
 							</td>
 						</tr>
 					} @empty {
@@ -89,3 +102,43 @@
 <app-person-form #personFormModal (onClose)="onClosePersonForm($event)" />
 
 <app-confirmation-modal #deletePersonModal (onConfirmation)="onConfirmation($event)" />
+
+<div #notValidExcelWarn id="not-calid-excel-warn" class="overlay --prevent-on-load-init modal hidden overlay-open:opacity-100" role="dialog" tabindex="-1">
+	<div class="modal-dialog overlay-open:opacity-100">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Usuarios con datos erróneos</h3>
+
+				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" (click)="closeErrorPersonExcel()">
+					<span class="icon-[tabler--x] size-4"></span>
+				</button>
+			</div>
+
+			<div class="modal-body">
+				<p>A los siguientes usuarios tienen datos erróneos en el Excel, o algún valor repetido en el sistema.</p>
+
+				<p class="my-3 text-lg font-semibold">Números de identificación de registros no válidos para inserción:</p>
+
+				<ul class="divide-y divide-base-content/25 rounded-md border border-base-content/25 *:p-3 first:*:rounded-t-md last:*:rounded-b-md">
+					@for (personWithProblem of personsWithProblems(); track $index) {
+						<li>
+							<ul class="list-inside list-disc">
+								@for (problem of personWithProblem; track $index) {
+									@if ($index === 0) {
+										<span class="mb-2 font-medium">{{ problem }}</span>
+									} @else {
+										<li class="mb-2">{{ problem }}</li>
+									}
+								}
+							</ul>
+						</li>
+					}
+				</ul>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" (click)="closeErrorPersonExcel()">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>

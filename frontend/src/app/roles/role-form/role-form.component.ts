@@ -5,7 +5,7 @@ import { HSOverlay } from "flyonui/flyonui";
 
 import { RoleService } from "@services";
 
-import { RoleCreate, RoleOption } from "@types";
+import { Role, RoleCreate, RoleOption } from "@types";
 
 import { openToast } from "@lib";
 
@@ -15,6 +15,12 @@ import { openToast } from "@lib";
 	templateUrl: "./role-form.component.html"
 })
 export class RoleFormComponent {
+	private formBuilder = inject(FormBuilder);
+
+	private roleService = inject(RoleService);
+
+	private privateIsLoading = false;
+
 	public roleFormModal = viewChild<ElementRef<HTMLElement>>("roleFormModal");
 
 	public isLoading = signal(false);
@@ -23,22 +29,20 @@ export class RoleFormComponent {
 
 	public roleOptions = signal<RoleOption[]>([]);
 
+	public role = signal<Role | null>(null);
+
 	public showErrors = signal(false);
-
-	private formBuilder = inject(FormBuilder);
-
-	private roleService = inject(RoleService);
-
-	@Output() readonly onClose = new EventEmitter<boolean>();
 
 	public myForm = this.formBuilder.group({
 		name: ["", [Validators.required, Validators.minLength(1), Validators.maxLength(60)]],
 		roleOptions: this.formBuilder.array<FormGroup>([], Validators.required)
 	});
 
+	@Output() public readonly onClose = new EventEmitter<boolean>();
+
 	constructor() {
 		effect(() => {
-			if (this.idRole() !== null) {
+			if (this.idRole() !== null && !this.privateIsLoading) {
 				this.getRoleById();
 			}
 		});
@@ -48,24 +52,83 @@ export class RoleFormComponent {
 		return this.myForm.controls.roleOptions as FormArray;
 	}
 
-	public open(): void {
+	private fillRoleOptionsInForm(roleOptions: RoleOption[]): void {
+		roleOptions.forEach((roleOption) => {
+			this.roleOptionsFormArray.push(this.formBuilder.group(roleOption));
+		});
+	}
+
+	private closeModal(reload = false): void {
+		const deletePersonModal = new HSOverlay(this.roleFormModal()!.nativeElement);
+
+		deletePersonModal.close();
+
+		this.onClose.emit(reload);
+	}
+
+	public openModal(): void {
 		const deletePersonModal = new HSOverlay(this.roleFormModal()!.nativeElement);
 
 		deletePersonModal.open();
 	}
 
-	public getRoleById(): void {
+	private getRoleById(): void {
+		this.privateIsLoading = !this.privateIsLoading;
+		this.isLoading.set(!this.isLoading());
+
 		this.roleService.getById(this.idRole()!).subscribe({
 			next: ({ data }) => {
-				const { name } = data!;
+				this.role.set(data!);
 
 				this.myForm.setValue({
-					name,
+					name: this.role()!.name,
 					roleOptions: []
 				});
+
+				this.fillRoleOptionsInForm(this.role()!.roleOptions);
+
+				this.isLoading.set(!this.isLoading());
+				this.privateIsLoading = !this.privateIsLoading;
 			},
 			error: (err) => {
 				openToast(err.error.errorMessage, "error");
+
+				this.isLoading.set(!this.isLoading());
+				this.privateIsLoading = !this.privateIsLoading;
+			}
+		});
+	}
+
+	private createRole(newRole: RoleCreate): void {
+		this.roleService.create(newRole).subscribe({
+			next: () => {
+				this.isLoading.set(!this.isLoading());
+				this.privateIsLoading = !this.privateIsLoading;
+
+				this.closeModal(true);
+			},
+			error: (err) => {
+				openToast(err.error.errorMessage, "error");
+
+				this.isLoading.set(!this.isLoading());
+				this.privateIsLoading = !this.privateIsLoading;
+			}
+		});
+	}
+
+	private updateRole(newRole: Role): void {
+		this.roleService.update(newRole).subscribe({
+			next: () => {
+				this.isLoading.set(!this.isLoading());
+				this.privateIsLoading = !this.privateIsLoading;
+
+				this.closeModal(true);
+			},
+			error: (err) => {
+				openToast(err.error.errorMessage, "error");
+
+				this.isLoading.set(!this.isLoading());
+				this.privateIsLoading = !this.privateIsLoading;
 			}
 		});
 	}
@@ -85,7 +148,7 @@ export class RoleFormComponent {
 		select.value = "";
 	}
 
-	public removeRoleOptionFromForm(index: number) {
+	public removeRoleOptionFromForm(index: number): void {
 		this.roleOptionsFormArray.removeAt(index);
 	}
 
@@ -106,7 +169,6 @@ export class RoleFormComponent {
 	}
 
 	public onSubmit(): void {
-		console.log(this.myForm.controls.roleOptions);
 		this.showErrors.set(false);
 
 		if (this.myForm.invalid) {
@@ -117,38 +179,39 @@ export class RoleFormComponent {
 			return;
 		}
 
+		this.privateIsLoading = !this.privateIsLoading;
 		this.isLoading.set(!this.isLoading());
 
-		const newRole: RoleCreate = {
-			name: this.myForm.value.name!,
-			roleOptions: this.myForm.value.roleOptions!
-		};
+		if (this.idRole() === null) {
+			const newRole: RoleCreate = {
+				name: this.myForm.value.name!,
+				roleOptions: this.myForm.value.roleOptions!
+			};
 
-		this.roleService.create(newRole).subscribe({
-			next: () => {
-				this.isLoading.set(!this.isLoading());
+			this.createRole(newRole);
+		} else {
+			const roleUpdated: Role = {
+				id: this.role()!.id,
+				name: this.myForm.value.name!,
+				roleOptions: this.myForm.value.roleOptions!,
+				status: this.role()!.status,
+			};
 
-				this.close(true);
-			},
-			error: (err) => {
-				openToast(err.error.errorMessage, "error");
-
-				this.isLoading.set(!this.isLoading());
-			}
-		});
+			this.updateRole(roleUpdated);
+		}
 	}
 
-	public close(reload = false): void {
+	public onReset(reload = false): void {
 		this.roleOptionsFormArray.clear();
 
-		this.myForm.patchValue({
-			name: ""
+		this.myForm.reset({
+			name: "",
+			roleOptions: []
 		});
 
-		const deletePersonModal = new HSOverlay(this.roleFormModal()!.nativeElement);
+		this.idRole.set(null);
+		this.roleOptions.set([]);
 
-		deletePersonModal.close();
-
-		this.onClose.emit(reload);
+		this.closeModal(reload);
 	}
 }

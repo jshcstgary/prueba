@@ -5,25 +5,17 @@
 
 	<div class="drawer-body px-2 pt-4">
 		<ul class="menu p-0">
-			<li>
-				<a data-overlay="#sidebar-overlay" [routerLink]="['/']"> <span class="icon-[tabler--home] size-5"></span> Inicio </a>
-			</li>
-
-			<li>
-				<a data-overlay="#sidebar-overlay" [routerLink]="['/dashboard']"> <span class="icon-[tabler--user] size-5"></span> Dashboard </a>
-			</li>
-
-			<li>
-				<a data-overlay="#sidebar-overlay" [routerLink]="['/users']"> <span class="icon-[tabler--user] size-5"></span> Usuarios </a>
-			</li>
-
-			<li>
-				<a data-overlay="#sidebar-overlay" [routerLink]="['/roles']"> <span class="icon-[tabler--user] size-5"></span> Roles </a>
-			</li>
-
-			<li>
-				<a data-overlay="#sidebar-overlay" [routerLink]="['/role-options']"> <span class="icon-[tabler--user] size-5"></span> Opciones de rol </a>
-			</li>
+			@if (isLoading()) {
+				@for (item of [].constructor(3); track $index) {
+					<div class="skeleton skeleton-animated h-10 w-full"></div>
+				}
+			} @else {
+				@for (roleOption of roleOptions(); track $index) {
+					<li>
+						<a data-overlay="#sidebar-overlay" [routerLink]="[roleOption.link]"> {{ roleOption.name }} </a>
+					</li>
+				}
+			}
 		</ul>
 	</div>
 </aside>
@@ -31,25 +23,17 @@
 <aside class="hidden h-screen max-w-64 overlay-open:translate-x-0 lg:static lg:z-0 lg:flex lg:h-full lg:w-52 lg:translate-x-0 lg:border-r lg:border-r-base-content/25 lg:shadow-none" tabindex="-1">
 	<div class="drawer-body px-2 pt-4">
 		<ul class="menu p-0">
-			<li>
-				<a [routerLink]="['/']"> <span class="icon-[tabler--home] size-5"></span> Inicio </a>
-			</li>
-
-			<li>
-				<a [routerLink]="['/dashboard']"> <span class="icon-[tabler--user] size-5"></span> Dashboard </a>
-			</li>
-
-			<li>
-				<a [routerLink]="['/users']"> <span class="icon-[tabler--user] size-5"></span> Usuarios </a>
-			</li>
-
-			<li>
-				<a [routerLink]="['/roles']"> <span class="icon-[tabler--user] size-5"></span> Roles </a>
-			</li>
-
-			<li>
-				<a [routerLink]="['/role-options']"> <span class="icon-[tabler--user] size-5"></span> Opciones de rol </a>
-			</li>
+			@if (isLoading()) {
+				@for (item of [].constructor(3); track $index) {
+					<div class="skeleton skeleton-animated h-10 w-full"></div>
+				}
+			} @else {
+				@for (roleOption of roleOptions(); track $index) {
+					<li>
+						<a [routerLink]="[roleOption.link]"> {{ roleOption.name }} </a>
+					</li>
+				}
+			}
 		</ul>
 	</div>
 </aside>

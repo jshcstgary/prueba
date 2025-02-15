@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+using PruebaViamaticaBackend.Models.Dtos.Role;
+
 namespace PruebaViamaticaBackend.Models.Dtos.User;
 
 public class UserDto
@@ -21,4 +23,7 @@ public class UserDto
 	[Required]
 	[MaxLength(20)]
 	public string Status { get; set; } = null!;
+
+	[Required]
+	public ICollection<RoleDto> Roles { get; set; } = [];
 }

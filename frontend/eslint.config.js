@@ -22,6 +22,7 @@ module.exports = tseslint.config(
 			"linebreak-style": ["error", "unix"],
 			quotes: ["error", "double"],
 			semi: ["error", "always"],
+			"no-debugger": "warn",
 			"no-useless-constructor": "off",
 			"no-empty-function": [
 				"error",

@@ -28,6 +28,7 @@
 			"@data": ["src/app/data"],
 			"@dev-environments": ["src/environments/environment.development.ts"],
 			"@environments": ["src/environments/environment.ts"],
+			"@guards": ["src/app/guards"],
 			"@layouts": ["src/app/layouts"],
 			"@lib": ["src/app/lib"],
 			"@pages": ["src/app/pages"],
@@ -35,7 +36,7 @@
 			"@roles": ["src/app/roles"],
 			"@role-options": ["src/app/role-options"],
 			"@services": ["src/app/services"],
-			"@types": ["src/app/types*"]
+			"@types": ["src/app/types"]
 		},
 		"skipLibCheck": true,
 		"strict": true,

@@ -4,36 +4,65 @@
 			<div class="modal-header">
 				<h3 class="modal-title">Ingresar opción del rol</h3>
 
-				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" aria-label="Close" (click)="close()">
+				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" aria-label="Close" (click)="onReset()">
 					<span class="icon-[tabler--x] size-4"></span>
 				</button>
 			</div>
 
 			<form class="modal-body" [formGroup]="myForm" (ngSubmit)="onSubmit()">
-				<div class="md:flex md:gap-5">
-					<div class="w-full">
-						<label class="label label-text" for="name"> Nombre de la opción del rol </label>
+				<div>
+					@if (isLoading()) {
+						<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
+					} @else {
+						<div class="w-full">
+							<label class="label label-text" for="name"> Nombre de la opción del rol </label>
 
-						<input
-							type="text"
-							class="input"
-							id="name"
-							formControlName="name"
-							[ngClass]="{
-								'is-invalid': showErrors() && getNameError() !== ''
-							}"
-						/>
+							<input
+								type="text"
+								class="input"
+								id="name"
+								formControlName="name"
+								[ngClass]="{
+									'is-invalid': showErrors() && getNameError() !== ''
+								}"
+							/>
 
-						<span class="label h-3">
-							@if (showErrors()) {
-								<span class="label-text-alt">{{ getNameError() }}</span>
-							}
-						</span>
-					</div>
+							<span class="label h-3">
+								@if (showErrors()) {
+									<span class="label-text-alt">{{ getNameError() }}</span>
+								}
+							</span>
+						</div>
+					}
+
+					@if (isLoading()) {
+						<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
+					} @else {
+						<div class="w-full">
+							<label class="label label-text" for="link"> Enlace </label>
+
+							<input
+								type="text"
+								class="input"
+								id="link"
+								formControlName="link"
+								placeholder="/path/to/role-option"
+								[ngClass]="{
+									'is-invalid': showErrors() && getLinkError() !== ''
+								}"
+							/>
+
+							<span class="label h-3">
+								@if (showErrors()) {
+									<span class="label-text-alt">{{ getLinkError() }}</span>
+								}
+							</span>
+						</div>
+					}
 				</div>
 
 				<div class="modal-footer flex flex-col gap-5 md:flex-row">
-					<button type="reset" class="btn btn-secondary btn-soft order-2 w-full md:order-1 md:flex-1" [disabled]="isLoading()" (click)="close()"><span class="icon-[tabler--playstation-x] size-4"></span> Cancelar</button>
+					<button type="reset" class="btn btn-secondary btn-soft order-2 w-full md:order-1 md:flex-1" [disabled]="isLoading()" (click)="onReset()"><span class="icon-[tabler--playstation-x] size-4"></span> Cancelar</button>
 
 					<button type="submit" class="btn btn-primary order-1 w-full md:order-2 md:flex-1" [disabled]="isLoading()">
 						@if (isLoading()) {

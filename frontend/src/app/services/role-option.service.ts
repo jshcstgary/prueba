@@ -12,9 +12,9 @@ import { environment } from "@dev-environments";
 	providedIn: "root"
 })
 export class RoleOptionService {
-	private http = inject(HttpClient);
-
 	private roleOptionUrl = environment.roleOptionUrl;
+
+	private http = inject(HttpClient);
 
 	public create(newRoleOption: RoleOptionCreate): Observable<ApiResponse<RoleOption>> {
 		return this.http.post<ApiResponse<RoleOption>>(this.roleOptionUrl, newRoleOption);
@@ -24,7 +24,7 @@ export class RoleOptionService {
 		let params = new HttpParams();
 
 		if (status !== undefined) {
-			params = params.append(Params.status, status);
+			params = params.append(Params.Status, status);
 		}
 
 		return this.http.get<ApiResponse<RoleOption[]>>(this.roleOptionUrl, {

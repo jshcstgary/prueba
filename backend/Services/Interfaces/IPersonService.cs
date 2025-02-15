@@ -7,7 +7,8 @@ namespace PruebaViamaticaBackend.Services.Interfaces;
 
 public interface IPersonService
 {
-    Task<PersonDto> Create(PersonCreateDto personCreateDto);
+    // Task<PersonDto> Create(PersonCreateDto personCreateDto);
+    Task<RowsChanged> Create(ICollection<PersonCreateDto> personsCreateDto);
 
     Task<IEnumerable<PersonDto>> GetAll(Expression<Func<Person, bool>>? filter = null);
 

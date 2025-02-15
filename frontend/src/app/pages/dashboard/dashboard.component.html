@@ -1,18 +1,13 @@
 <main>
 	<div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-		@for (count of personCount(); track $index) {
-			<app-tile [label]="count.label" [amount]="count.amount" [colorFrom]="count.colorFrom" [colorTo]="count.colorTo" />
+		@if (personCount().length === 0) {
+			@for (i of [].constructor(6); track $index) {
+				<div class="skeleton skeleton-animated h-28 w-full"></div>
+			}
+		} @else {
+			@for (count of personCount(); track $index) {
+				<app-tile [label]="count.label" [amount]="count.amount" [colorFrom]="count.colorFrom" [colorTo]="count.colorTo" />
+			}
 		}
-		<!-- <app-tile label="Todos los usuarios" [amount]="9999" />
-
-		<app-tile label="Usuarios activos" colorFrom="from-blue-500" colorTo="to-blue-300" [amount]="9999" />
-
-		<app-tile label="Usuarios bloqueados" colorFrom="from-green-500" colorTo="to-green-300" [amount]="9999" />
-
-		<app-tile label="Usuarios eliminados" colorFrom="from-purple-500" colorTo="to-purple-300" [amount]="9999" />
-
-		<app-tile label="Usuarios con sesión activa" colorFrom="from-sky-500" colorTo="to-sky-300" [amount]="9999" />
-
-		<app-tile label="Usuarios con sesión inactiva" colorFrom="from-teal-500" colorTo="to-teal-300" [amount]="9999" /> -->
 	</div>
 </main>

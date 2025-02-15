@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 
 using AutoMapper;
+
 using PruebaViamaticaBackend.Constants;
 using PruebaViamaticaBackend.Models;
 using PruebaViamaticaBackend.Models.Dtos.Person;
@@ -9,40 +10,33 @@ using PruebaViamaticaBackend.Services.Interfaces;
 
 namespace PruebaViamaticaBackend.Services;
 
-public class PersonService : IPersonService
+public class PersonService(ILogger<IPersonService> logger, IPersonRepository repository, IMapper mapper) : IPersonService
 {
-	private readonly ILogger<IPersonService> _logger;
+	private readonly ILogger<IPersonService> _logger = logger;
 
-	private readonly IPersonRepository _repository;
+	private readonly IPersonRepository _repository = repository;
 
-	private readonly IMapper _mapper;
+	private readonly IMapper _mapper = mapper;
 
-	public PersonService(ILogger<IPersonService> logger, IPersonRepository repository, IMapper mapper)
-	{
-		_logger = logger;
-		_repository = repository;
-		_mapper = mapper;
-	}
-
-	public async Task<PersonDto> Create(PersonCreateDto personCreateDto)
+    // public async Task<PersonDto> Create(PersonCreateDto personCreateDto)
+    public async Task<RowsChanged> Create(ICollection<PersonCreateDto> personsCreateDto)
 	{
 		_logger.LogInformation("Executing Service class - Create method");
 
 		try
 		{
-			Person person = _mapper.Map<Person>(personCreateDto);
+			ICollection<Person> persons = _mapper.Map<ICollection<Person>>(personsCreateDto);
 
-			person.User!.Mail = $"{person.Names.ToLower().First()}{person.Surnames.ToLower().Split(" ")[0]}{person.Surnames.ToLower().Split(" ")[1].First()}@mail.com";
-			person.User!.Status = Status.Active;
-			person.User!.SessionActive = SessionStatus.Inactive;
+			foreach (Person person in persons)
+			{
+				person.User!.Mail = $"{person.Names.ToLower().First()}{person.Surnames.ToLower().Split(" ")[0]}{person.Surnames.ToLower().Split(" ")[1].First()}@mail.com";
+				person.User!.Status = Status.Active;
+				person.User!.SessionActive = SessionStatus.Inactive;
+			}
 
-			// int? idPerson = await _repository.Create(person);
-			Person newPerson = await _repository.Create(person);
+			RowsChanged rowsChanged = await _repository.Create(persons);
 
-			PersonDto personDto = _mapper.Map<PersonDto>(newPerson);
-
-			// return idPerson;
-			return personDto;
+			return rowsChanged;
 		}
 		catch (Exception)
 		{

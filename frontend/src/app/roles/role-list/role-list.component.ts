@@ -19,6 +19,10 @@ import { openToast } from "@lib";
 	templateUrl: "./role-list.component.html"
 })
 export class RoleListComponent implements OnInit {
+	private roleService = inject(RoleService);
+
+	private roleOptionService = inject(RoleOptionService);
+
 	public status = Status;
 
 	public roles = signal<Role[]>([]);
@@ -32,10 +36,6 @@ export class RoleListComponent implements OnInit {
 	public roleFormModal = viewChild<RoleFormComponent>("roleFormModal");
 
 	public deleteRoleModal = viewChild<ConfirmationModalComponent>("deleteRoleModal");
-
-	private roleService = inject(RoleService);
-
-	private roleOptionService = inject(RoleOptionService);
 
 	ngOnInit() {
 		this.getData();
@@ -54,11 +54,34 @@ export class RoleListComponent implements OnInit {
 		});
 	}
 
+	private deleteRole(): void {
+		this.deleteRoleModal()?.isLoading.set(!this.deleteRoleModal()?.isLoading());
+
+		this.roleService.delete(this.idRole()).subscribe({
+			next: () => {
+				this.deleteRoleModal()?.isLoading.set(!this.deleteRoleModal()?.isLoading());
+				this.deleteRoleModal()?.close();
+
+				openToast("Registro eliminado.", "success");
+
+				this.getData();
+			},
+			error: (err) => {
+				this.deleteRoleModal()?.isLoading.set(!this.deleteRoleModal()?.isLoading());
+				this.deleteRoleModal()?.close();
+
+				openToast(err.error.errorMessage, "error");
+
+				this.getData();
+			}
+		});
+	}
+
 	public openRoleFormModal(idRole: number | null): void {
 		this.roleFormModal()?.idRole.set(idRole);
 		this.roleFormModal()?.roleOptions.set(this.roleOptions());
 
-		this.roleFormModal()?.open();
+		this.roleFormModal()?.openModal();
 	}
 
 	public openDeleteRoleModal(idRole: number): void {
@@ -83,28 +106,5 @@ export class RoleListComponent implements OnInit {
 		}
 
 		this.deleteRole();
-	}
-
-	private deleteRole(): void {
-		this.deleteRoleModal()?.isLoading.set(!this.deleteRoleModal()?.isLoading());
-
-		this.roleService.delete(this.idRole()).subscribe({
-			next: () => {
-				this.deleteRoleModal()?.isLoading.set(!this.deleteRoleModal()?.isLoading());
-				this.deleteRoleModal()?.close();
-
-				openToast("Registro eliminado.", "success");
-
-				this.getData();
-			},
-			error: (err) => {
-				this.deleteRoleModal()?.isLoading.set(!this.deleteRoleModal()?.isLoading());
-				this.deleteRoleModal()?.close();
-
-				openToast(err.error.errorMessage, "error");
-
-				this.getData();
-			}
-		});
 	}
 }

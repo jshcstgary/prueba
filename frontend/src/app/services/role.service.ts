@@ -12,20 +12,32 @@ import { environment } from "@dev-environments";
 	providedIn: "root"
 })
 export class RoleService {
-	private http = inject(HttpClient);
-
 	private roleUrl = environment.roleUrl;
+
+	private http = inject(HttpClient);
 
 	public create(newRole: RoleCreate): Observable<ApiResponse<Role>> {
 		return this.http.post<ApiResponse<Role>>(this.roleUrl, newRole);
 	}
 
-	public getAll(): Observable<ApiResponse<Role[]>> {
-		return this.http.get<ApiResponse<Role[]>>(this.roleUrl);
+	public getAll(status?: Status): Observable<ApiResponse<Role[]>> {
+		let params = new HttpParams();
+
+		if (status !== undefined) {
+			params = params.append(Params.Status, status);
+		}
+
+		return this.http.get<ApiResponse<Role[]>>(this.roleUrl, {
+			params
+		});
 	}
 
 	public getById(idRole: number): Observable<ApiResponse<Role>> {
 		return this.http.get<ApiResponse<Role>>(`${this.roleUrl}/${idRole}`);
+	}
+
+	public update(roleUpdated: Role): Observable<ApiResponse<Role>> {
+		return this.http.put<ApiResponse<Role>>(this.roleUrl, roleUpdated);
 	}
 
 	public delete(idRole: number): Observable<ApiResponse<null>> {

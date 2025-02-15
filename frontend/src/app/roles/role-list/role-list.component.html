@@ -1,6 +1,10 @@
-<div class="flex items-center justify-end">
-	<button type="button" class="--prevent-on-load-init btn btn-success mb-5" aria-haspopup="dialog" aria-expanded="false" aria-controls="role-form-modal" (click)="openRoleFormModal(null)">Nuevo rol</button>
-</div>
+@if (isLoading()) {
+	<div class="skeleton skeleton-animated mb-5 h-9 w-full"></div>
+} @else {
+	<div class="flex items-center justify-end">
+		<button type="button" class="--prevent-on-load-init btn btn-success mb-5" aria-haspopup="dialog" aria-expanded="false" aria-controls="role-form-modal" (click)="openRoleFormModal(null)"><span class="icon-[tabler--circle-plus]"></span> Nuevo rol</button>
+	</div>
+}
 
 @if (isLoading()) {
 	<div class="skeleton skeleton-animated h-96 w-full"></div>
@@ -26,7 +30,7 @@
 							<td class="text-nowrap">{{ role.name }}</td>
 
 							<td class="text-nowrap">
-								<ul>
+								<ul class="w-96 divide-y divide-base-content/25 rounded-md border border-base-content/25 *:p-3 first:*:rounded-t-md last:*:rounded-b-md">
 									@for (roleOption of role.roleOptions; track $index) {
 										<li>{{ roleOption.name }}</li>
 									}

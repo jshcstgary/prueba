@@ -17,6 +17,8 @@ import { RoleOptionFormComponent } from "@role-options";
 	templateUrl: "./role-option-list.component.html"
 })
 export class RoleOptionListComponent implements OnInit {
+	private roleOptionService = inject(RoleOptionService);
+
 	public status = Status;
 
 	public roleOptions = signal<RoleOption[]>([]);
@@ -28,8 +30,6 @@ export class RoleOptionListComponent implements OnInit {
 	public roleOptionFormModal = viewChild<RoleOptionFormComponent>("roleOptionFormModal");
 
 	public deleteRoleOptionModal = viewChild<ConfirmationModalComponent>("deleteRoleOptionModal");
-
-	private roleOptionService = inject(RoleOptionService);
 
 	ngOnInit() {
 		this.getRoleOptions();
@@ -54,10 +54,33 @@ export class RoleOptionListComponent implements OnInit {
 		});
 	}
 
+	private deleteRoleOption(): void {
+		this.deleteRoleOptionModal()?.isLoading.set(!this.deleteRoleOptionModal()?.isLoading());
+
+		this.roleOptionService.delete(this.idRole()).subscribe({
+			next: () => {
+				this.deleteRoleOptionModal()?.isLoading.set(!this.deleteRoleOptionModal()?.isLoading());
+				this.deleteRoleOptionModal()?.close();
+
+				openToast("Registro eliminado.", "success");
+
+				this.getRoleOptions();
+			},
+			error: (err) => {
+				this.deleteRoleOptionModal()?.isLoading.set(!this.deleteRoleOptionModal()?.isLoading());
+				this.deleteRoleOptionModal()?.close();
+
+				openToast(err.error.errorMessage, "error");
+
+				this.getRoleOptions();
+			}
+		});
+	}
+
 	public openRoleOptionFormModal(idRoleOption: number | null): void {
 		this.roleOptionFormModal()?.idRoleOption.set(idRoleOption);
 
-		this.roleOptionFormModal()?.open();
+		this.roleOptionFormModal()?.openModal();
 	}
 
 	public openDeleteRoleOptionModal(idRoleOption: number): void {
@@ -82,28 +105,5 @@ export class RoleOptionListComponent implements OnInit {
 		}
 
 		this.deleteRoleOption();
-	}
-
-	private deleteRoleOption(): void {
-		this.deleteRoleOptionModal()?.isLoading.set(!this.deleteRoleOptionModal()?.isLoading());
-
-		this.roleOptionService.delete(this.idRole()).subscribe({
-			next: () => {
-				this.deleteRoleOptionModal()?.isLoading.set(!this.deleteRoleOptionModal()?.isLoading());
-				this.deleteRoleOptionModal()?.close();
-
-				openToast("Registro eliminado.", "success");
-
-				this.getRoleOptions();
-			},
-			error: (err) => {
-				this.deleteRoleOptionModal()?.isLoading.set(!this.deleteRoleOptionModal()?.isLoading());
-				this.deleteRoleOptionModal()?.close();
-
-				openToast(err.error.errorMessage, "error");
-
-				this.getRoleOptions();
-			}
-		});
 	}
 }

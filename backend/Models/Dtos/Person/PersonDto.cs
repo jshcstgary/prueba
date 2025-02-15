@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 using PruebaViamaticaBackend.Models.Dtos.User;
 
 namespace PruebaViamaticaBackend.Models.Dtos.Person;

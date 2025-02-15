@@ -6,7 +6,8 @@ namespace PruebaViamaticaBackend.Repository.Interfaces;
 
 public interface IPersonRepository
 {
-	Task<Person> Create(Person person);
+	// Task<Person> Create(Person person);
+	Task<RowsChanged> Create(ICollection<Person> newPersons);
 
 	Task<IEnumerable<Person>> GetAll(Expression<Func<Person, bool>>? filter = null);
 

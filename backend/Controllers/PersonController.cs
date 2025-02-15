@@ -21,34 +21,38 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 	private readonly ApiResponse _apiResponse = new ApiResponse();
 
 	[HttpPost(Name = "PersonController_Create")]
-	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status201Created)]
+	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status207MultiStatus)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
-	public async Task<ActionResult<ApiResponse>> Create([FromBody] PersonCreateDto personCreateDto)
+	// public async Task<ActionResult<ApiResponse>> Create([FromBody] PersonCreateDto personCreateDto)
+	public async Task<ActionResult<ApiResponse>> Create([FromBody] ICollection<PersonCreateDto> personsCreateDto)
 	{
 		_logger.LogInformation("Executing PersonController class - Create method");
 
 		try
 		{
-			if (personCreateDto == null)
+			if (personsCreateDto == null)
+
+				if (personsCreateDto == null || personsCreateDto.Count == 0)
+				{
+					_logger.LogError("PersonController class - Create method - No data recieved.");
+
+					_apiResponse.StatusCode = HttpStatusCode.BadRequest;
+					_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
+					_apiResponse.ErrorMessage = "Datos no recibidos o lista vacía.";
+
+					return BadRequest(_apiResponse);
+				}
+
+			// if (personsCreateDto.User == null)
+			if (personsCreateDto.Any(p => p.User == null))
 			{
 				_logger.LogError("PersonController class - Create method - No data recieved.");
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "No data received";
-
-				return BadRequest(_apiResponse);
-			}
-
-			if (personCreateDto.User == null)
-			{
-				_logger.LogError("PersonController class - Create method - No data recieved.");
-
-				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
-				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "User not received";
+				_apiResponse.ErrorMessage = "Uno de los elementos no tiene usuario.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -59,21 +63,21 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Invalid data";
+				_apiResponse.ErrorMessage = "Se enviaron datos no válidos.";
 
 				return BadRequest(_apiResponse);
 			}
 
-			// int? idPerson = await _service.Create(personCreateDto);
-			PersonDto personDto = await _service.Create(personCreateDto);
+			RowsChanged rowsChanged = await _service.Create(personsCreateDto);
 
 			_logger.LogInformation("Data created successfully.");
 
-			_apiResponse.StatusCode = HttpStatusCode.Created;
+			_apiResponse.StatusCode = HttpStatusCode.MultiStatus;
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-			_apiResponse.Data = personDto;
+			_apiResponse.Data = rowsChanged;
 
-			return CreatedAtRoute("PersonController_GetById", personDto, _apiResponse);
+			// return CreatedAtRoute("PersonController_GetById", rowsChanged, _apiResponse);
+			return StatusCode(StatusCodes.Status207MultiStatus, _apiResponse);
 		}
 		catch (RetryLimitExceededException ex)
 		{
@@ -281,7 +285,7 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "No data received";
+				_apiResponse.ErrorMessage = "Datos no recibidos.";
 
 				return BadRequest(_apiResponse);
 			}

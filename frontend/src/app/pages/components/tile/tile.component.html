@@ -1,9 +1,9 @@
 <div class="flex h-28 items-center justify-between rounded-md bg-gradient-to-r p-3 text-white" [ngClass]="[colorFrom(), colorTo()]">
-	<div class="">
+	<div class="flex items-center justify-start gap-15">
 		<span class="text-5xl font-bold">{{ amount() }}</span>
 
-		<h4 class="text-lg font-semibold">{{ label() }}</h4>
+		<span class="icon-[tabler--circle-arrow-right-filled] size-20 bg-white/50"></span>
 	</div>
 
-	<span class="icon-[tabler--circle-arrow-right-filled] size-20 bg-white/75"></span>
+	<h4 class="basis-2/5 text-lg font-semibold">{{ label() }}</h4>
 </div>

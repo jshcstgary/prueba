@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 
-import { PersonService } from "@services";
+import { AuthService, PersonService } from "@services";
 
 import { ColorTile, Count, PersonCount } from "@types";
 
@@ -14,11 +14,11 @@ import { colorTiles } from "@data";
 	templateUrl: "./dashboard.component.html"
 })
 export class DashboardComponent implements OnInit {
+	private personService = inject(PersonService);
+
 	public isLoading = signal(false);
 
 	public personCount = signal<Count[]>([]);
-
-	private personService = inject(PersonService);
 
 	ngOnInit() {
 		this.getCount();

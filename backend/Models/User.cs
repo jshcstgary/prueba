@@ -16,7 +16,7 @@ public partial class User
 
 	public int IdPerson { get; set; }
 
-	public virtual Person IdNavigation { get; set; } = null!;
+	public virtual Person Person { get; set; } = null!;
 
 	public virtual ICollection<Session> Sessions { get; set; } = [];
 

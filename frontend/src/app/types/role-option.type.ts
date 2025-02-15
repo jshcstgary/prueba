@@ -1,5 +1,6 @@
 export type RoleOptionCreate = {
 	name: string;
+	link: string;
 };
 
 export type RoleOption = RoleOptionCreate & {

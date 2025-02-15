@@ -1,3 +1,5 @@
+import { User, UserCreate, UserUpdate } from "@types";
+
 export type CreateResponse = {
 	id: string;
 };
@@ -15,16 +17,9 @@ export type Person = Omit<PersonCreate, "user"> & {
 	user: User;
 };
 
-export type UserCreate = {
-	username: string;
-	password: string;
-};
-
-export type User = Omit<UserCreate, "password"> & {
+export type PersonUpdate = Omit<PersonCreate, "user"> & {
 	id: number;
-	mail: string;
-	sessionActive: boolean;
-	status: string;
+	user: UserUpdate;
 };
 
 export type PersonCount = {

@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+using PruebaViamaticaBackend.Models.Dtos.Role;
+
 namespace PruebaViamaticaBackend.Models.Dtos.User;
 
 public class UserUpdateDto
@@ -15,11 +17,11 @@ public class UserUpdateDto
 	[MaxLength(120)]
 	public string Mail { get; set; } = null!;
 
-	// [Required]
+	[Required(AllowEmptyStrings = true)]
 	// [MaxLength(50)]
 	// [MinLength(8)]
-	// [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_])(?=\S).*", ErrorMessage = "The field Password must contain at least one uppercase letter, a special sign and no spaces.")]
-	// public string Password { get; set; } = null!;
+	[RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_])(?=\S).*", ErrorMessage = "The field Password must contain at least one uppercase letter, a special sign and no spaces.")]
+	public string Password { get; set; } = null!;
 
 	[Required]
 	public bool SessionActive { get; set; }
@@ -27,4 +29,7 @@ public class UserUpdateDto
 	[Required]
 	[MaxLength(20)]
 	public string Status { get; set; } = null!;
+
+	[Required]
+	public ICollection<RoleDto> Roles { get; set; } = [];
 }

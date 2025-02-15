@@ -1,7 +1,9 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { PersonListComponent } from "@persons";
+import { PersonAuthFormComponent, PersonListComponent } from "@persons";
+
+import { notAuthenticatedGuard } from "@guards";
 
 const routes: Routes = [
 	{
@@ -9,6 +11,14 @@ const routes: Routes = [
 		component: PersonListComponent,
 		data: {
 			title: "Usuarios"
+		}
+	},
+	{
+		path: "user",
+		component: PersonAuthFormComponent,
+		canActivate: [notAuthenticatedGuard],
+		data: {
+			title: "Datos del perfil"
 		}
 	}
 ];

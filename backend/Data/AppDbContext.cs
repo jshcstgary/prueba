@@ -8,9 +8,9 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 {
 	public virtual DbSet<Person> Persons { get; set; }
 
-	public virtual DbSet<RoleOption> RoleOptions { get; set; }
-
 	public virtual DbSet<Role> Roles { get; set; }
+
+	public virtual DbSet<RoleOption> RoleOptions { get; set; }
 
 	public virtual DbSet<Session> Sessions { get; set; }
 
@@ -41,23 +41,6 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 				.HasColumnName("surnames");
 		});
 
-		modelBuilder.Entity<RoleOption>(entity =>
-		{
-			entity.HasKey(e => e.Id).HasName("PK__Role_Options");
-
-			entity.ToTable("ROLE_OPTIONS");
-
-			entity.Property(e => e.Id).HasColumnName("id");
-			entity.Property(e => e.Name)
-				.HasMaxLength(50)
-				.HasColumnName("name");
-			entity.Property(e => e.Status)
-				.HasMaxLength(20)
-				.IsUnicode(false)
-				.IsFixedLength()
-				.HasColumnName("status");
-		});
-
 		modelBuilder.Entity<Role>(entity =>
 		{
 			entity.HasKey(e => e.Id).HasName("PK__Roles");
@@ -70,13 +53,11 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 				.HasColumnName("name");
 			entity.Property(e => e.Status)
 				.HasMaxLength(20)
-				.IsUnicode(false)
-				.IsFixedLength()
 				.HasColumnName("status");
 
-			entity.HasMany(d => d.RoleOptions).WithMany(p => p.IdRoles)
+			entity.HasMany(d => d.RoleOptions).WithMany(p => p.Roles)
 				.UsingEntity<Dictionary<string, object>>(
-					"RolesRoleRoption",
+					"RolesRoleOption",
 					r => r.HasOne<RoleOption>().WithMany()
 						.HasForeignKey("IdRoleOption")
 						.OnDelete(DeleteBehavior.ClientSetNull)
@@ -87,7 +68,7 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 						.HasConstraintName("FK__Roles__Role_Options__Roles"),
 					j =>
 					{
-						j.HasKey("IdRole", "IdRoleOption").HasName("PK__Roles__Role_Options");
+						j.HasKey("IdRole", "IdRoleOption").HasName("PK__Roles__Rol_Options");
 						j.ToTable("ROLES_ROLE_OPTIONS");
 						j.IndexerProperty<int>("IdRole").HasColumnName("id_role");
 						j.IndexerProperty<int>("IdRoleOption").HasColumnName("id_role_option");
@@ -113,9 +94,27 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 					});
 		});
 
+		modelBuilder.Entity<RoleOption>(entity =>
+		{
+			entity.HasKey(e => e.Id).HasName("PK__Rol_Options");
+
+			entity.ToTable("ROLE_OPTIONS");
+
+			entity.Property(e => e.Id).HasColumnName("id");
+			entity.Property(e => e.Name)
+				.HasMaxLength(50)
+				.HasColumnName("name");
+			entity.Property(e => e.Status)
+				.HasMaxLength(20)
+				.HasColumnName("status");
+			entity.Property(e => e.Link)
+				.HasMaxLength(20)
+				.HasColumnName("link");
+		});
+
 		modelBuilder.Entity<Session>(entity =>
 		{
-			entity.HasKey(e => e.Id).HasName("PK__Sessions");
+			entity.HasKey(e => e.Id).HasName("PK__SESSIONS");
 
 			entity.ToTable("SESSIONS");
 
@@ -126,10 +125,10 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 			entity.Property(e => e.EntryDate)
 				.HasColumnType("datetime")
 				.HasColumnName("entry_date");
+			entity.Property(e => e.IdUser).HasColumnName("id_user");
 			entity.Property(e => e.Status)
 				.HasMaxLength(15)
 				.HasColumnName("status");
-			entity.Property(e => e.IdUser).HasColumnName("id_user");
 
 			entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Sessions)
 				.HasForeignKey(d => d.IdUser)
@@ -147,9 +146,7 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 
 			entity.HasIndex(e => e.Username, "IX__Users__Username").IsUnique();
 
-			entity.Property(e => e.Id)
-				.ValueGeneratedOnAdd()
-				.HasColumnName("id");
+			entity.Property(e => e.Id).HasColumnName("id");
 			entity.Property(e => e.IdPerson).HasColumnName("id_person");
 			entity.Property(e => e.Mail)
 				.HasMaxLength(120)
@@ -157,19 +154,15 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 			entity.Property(e => e.Password)
 				.HasMaxLength(50)
 				.HasColumnName("password");
-			entity.Property(e => e.SessionActive)
-				.HasColumnType("bit")
-				.HasColumnName("session_active");
+			entity.Property(e => e.SessionActive).HasColumnName("session_active");
 			entity.Property(e => e.Status)
 				.HasMaxLength(20)
-				.IsUnicode(false)
-				.IsFixedLength()
 				.HasColumnName("status");
 			entity.Property(e => e.Username)
 				.HasMaxLength(20)
 				.HasColumnName("username");
 
-			entity.HasOne(d => d.IdNavigation).WithOne(p => p.User)
+			entity.HasOne(d => d.Person).WithOne(p => p.User)
 				.HasForeignKey<User>(d => d.IdPerson)
 				.OnDelete(DeleteBehavior.ClientSetNull)
 				.HasConstraintName("FK__Users__Persons");

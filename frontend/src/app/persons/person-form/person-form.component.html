@@ -4,7 +4,7 @@
 			<div class="modal-header">
 				<h3 class="modal-title">Ingresar usuario</h3>
 
-				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" aria-label="Close" (click)="close()">
+				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" aria-label="Close" (click)="onReset()">
 					<span class="icon-[tabler--x] size-4"></span>
 				</button>
 			</div>
@@ -12,183 +12,251 @@
 			<form class="modal-body" [formGroup]="myForm" (ngSubmit)="onSubmit()">
 				<div class="md:flex md:gap-5">
 					<div class="md:flex-1">
-						<div class="w-full">
-							<label class="label label-text" for="names"> Nombres </label>
+						@if (isLoading()) {
+							<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
+						} @else {
+							<div class="w-full">
+								<label class="label label-text" for="names"> Nombres </label>
 
-							<input
-								type="text"
-								class="input"
-								id="names"
-								formControlName="names"
-								[ngClass]="{
-									'is-invalid': showErrors() && getNamesError() !== ''
-								}"
-							/>
+								<input
+									type="text"
+									class="input"
+									id="names"
+									formControlName="names"
+									[ngClass]="{
+										'is-invalid': showErrors() && getNamesError() !== ''
+									}"
+								/>
 
-							<span class="label h-3">
-								@if (showErrors()) {
-									<span class="label-text-alt">{{ getNamesError() }}</span>
-								}
-							</span>
-						</div>
+								<span class="label h-3">
+									@if (showErrors()) {
+										<span class="label-text-alt">{{ getNamesError() }}</span>
+									}
+								</span>
+							</div>
+						}
 
-						<div class="w-full">
-							<label class="label label-text" for="surnames"> Apellidos </label>
+						@if (isLoading()) {
+							<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
+						} @else {
+							<div class="w-full">
+								<label class="label label-text" for="surnames"> Apellidos </label>
 
-							<input
-								type="text"
-								class="input"
-								id="surnames"
-								formControlName="surnames"
-								[ngClass]="{
-									'is-invalid': showErrors() && getSurnamesError() !== ''
-								}"
-							/>
+								<input
+									type="text"
+									class="input"
+									id="surnames"
+									formControlName="surnames"
+									[ngClass]="{
+										'is-invalid': showErrors() && getSurnamesError() !== ''
+									}"
+								/>
 
-							<span class="label h-3">
-								@if (showErrors()) {
-									<span class="label-text-alt">{{ getSurnamesError() }}</span>
-								}
-							</span>
-						</div>
+								<span class="label h-3">
+									@if (showErrors()) {
+										<span class="label-text-alt">{{ getSurnamesError() }}</span>
+									}
+								</span>
+							</div>
+						}
 
-						<div class="w-full">
-							<label class="label label-text" for="identification"> Identificación </label>
+						@if (isLoading()) {
+							<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
+						} @else {
+							<div class="w-full">
+								<label class="label label-text" for="identification"> Identificación </label>
 
-							<input
-								type="text"
-								class="input"
-								id="identification"
-								formControlName="identification"
-								placeholder="xxxxxxxxxx"
-								[ngClass]="{
-									'is-invalid': showErrors() && getIdentificationError() !== ''
-								}"
-							/>
+								<input
+									type="text"
+									class="input"
+									id="identification"
+									formControlName="identification"
+									placeholder="xxxxxxxxxx"
+									[ngClass]="{
+										'is-invalid': showErrors() && getIdentificationError() !== ''
+									}"
+								/>
 
-							<span class="label h-3">
-								@if (showErrors()) {
-									<span class="label-text-alt">{{ getIdentificationError() }}</span>
-								}
-							</span>
-						</div>
+								<span class="label h-3">
+									@if (showErrors()) {
+										<span class="label-text-alt">{{ getIdentificationError() }}</span>
+									}
+								</span>
+							</div>
+						}
 
-						<div class="w-full">
-							<label class="label label-text" for="birthDate"> Fecha de nacimiento (YYYY-MM-DD) </label>
+						@if (isLoading()) {
+							<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
+						} @else {
+							<div class="w-full">
+								<label class="label label-text" for="birthDate"> Fecha de nacimiento (YYYY-MM-DD) </label>
 
-							<input
-								type="text"
-								class="input"
-								id="birthDate"
-								formControlName="birthDate"
-								placeholder="YYYY-MM-DD"
-								[ngClass]="{
-									'is-invalid': showErrors() && getBirthDateError() !== ''
-								}"
-							/>
+								<input
+									type="text"
+									class="input"
+									id="birthDate"
+									formControlName="birthDate"
+									placeholder="YYYY-MM-DD"
+									[ngClass]="{
+										'is-invalid': showErrors() && getBirthDateError() !== ''
+									}"
+								/>
 
-							<span class="label h-3">
-								@if (showErrors()) {
-									<span class="label-text-alt">{{ getBirthDateError() }}</span>
-								}
-							</span>
-						</div>
+								<span class="label h-3">
+									@if (showErrors()) {
+										<span class="label-text-alt">{{ getBirthDateError() }}</span>
+									}
+								</span>
+							</div>
+						}
 					</div>
 
 					<div class="md:flex-1" formGroupName="user">
-						<div class="w-full">
-							<label class="label label-text" for="username"> Nombre de usuario </label>
-
-							<input
-								type="text"
-								class="input"
-								id="username"
-								formControlName="username"
-								[ngClass]="{
-									'is-invalid': showErrors() && getUsernameError() !== ''
-								}"
-							/>
-
-							<span class="label">
-								<span class="label-text-alt">
-									<ul class="list-disc">
-										<li>Sin caracteres especiales</li>
-
-										<li>Al menos un número</li>
-
-										<li>Al menos una letra mayúscula</li>
-
-										<li>Mínimo 8 caracteres</li>
-									</ul>
-								</span>
-							</span>
-
-							<span class="label h-3">
-								@if (showErrors()) {
-									<span class="label-text-alt">{{ getUsernameError() }}</span>
-								}
-							</span>
-						</div>
-
-						@if (idPerson() === null) {
+						@if (isLoading()) {
+							<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
+						} @else {
 							<div class="w-full">
-								<label class="label label-text" for="password"> Contraseña </label>
+								<label class="label label-text" for="roles"> Roles del usuario </label>
 
-								<div class="input-group">
-									<input
-										id="password"
-										type="password"
-										class="input"
-										formControlName="password"
-										[ngClass]="{
-											'is-invalid': showErrors() && getPasswordError() !== ''
-										}"
-									/>
+								<select
+									class="select"
+									id="roles"
+									formControlName="roles"
+									[ngClass]="{
+										'is-invalid': showErrors() && getRoleError() !== ''
+									}"
+									(change)="addRoleToForm($event)"
+								>
+									<option hidden disabled value="">Seleccione...</option>
 
-									<span class="input-group-text">
-										<button
-											type="button"
-											data-toggle-password="{
-												'target': '#password'
-											}"
-											class="block"
-											aria-label="password toggle"
-										>
-											<span class="icon-[tabler--eye] hidden size-5 flex-shrink-0 text-base-content/80 password-active:block"></span>
+									@for (role of roles(); track $index) {
+										<option [value]="role.id">{{ role.name }}</option>
+									}
+								</select>
 
-											<span class="icon-[tabler--eye-off] block size-5 flex-shrink-0 text-base-content/80 password-active:hidden"></span>
-										</button>
-									</span>
+								<span class="label h-3">
+									@if (showErrors()) {
+										<span class="label-text-alt">{{ getRoleError() }}</span>
+									}
+								</span>
+							</div>
+						}
+
+						<div formArrayName="roles">
+							<div>
+								<div>
+									@for (role of rolesFormArray.controls; track $index) {
+										<span class="badge badge-primary badge-lg m-0.5 transition duration-300 ease-in-out removing:translate-x-5 removing:opacity-0" [formGroupName]="$index">
+											{{ role.value.name }}
+
+											<button type="button" class="icon-[tabler--circle-x-filled] size-5 min-h-0 px-0" aria-label="Dismiss Button" (click)="removeRoleFromForm($index)"></button>
+										</span>
+									}
 								</div>
 							</div>
+						</div>
 
-							<span class="label">
-								<span class="label-text-alt">
-									<ul class="list-disc">
-										<li>Sin espacios</li>
+						@if (isLoading()) {
+							<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
+						} @else {
+							<div class="w-full">
+								<label class="label label-text" for="username"> Nombre de usuario </label>
 
-										<li>Al menos un caracter especial</li>
+								<input
+									type="text"
+									class="input"
+									id="username"
+									formControlName="username"
+									[ngClass]="{
+										'is-invalid': showErrors() && getUsernameError() !== ''
+									}"
+								/>
 
-										<li>Al menos un número</li>
+								<span class="label">
+									<span class="label-text-alt">
+										<ul class="list-disc">
+											<li>Sin caracteres especiales</li>
 
-										<li>Al menos una letra mayúscula</li>
+											<li>Al menos un número</li>
 
-										<li>Mínimo 8 caracteres</li>
-									</ul>
+											<li>Al menos una letra mayúscula</li>
+
+											<li>Mínimo 8 caracteres</li>
+										</ul>
+									</span>
 								</span>
-							</span>
 
-							<span class="label h-3">
-								@if (showErrors()) {
-									<span class="label-text-alt">{{ getPasswordError() }}</span>
-								}
-							</span>
+								<span class="label h-3">
+									@if (showErrors()) {
+										<span class="label-text-alt">{{ getUsernameError() }}</span>
+									}
+								</span>
+							</div>
+						}
+
+						@if (idPerson() === null) {
+							@if (isLoading()) {
+								<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
+							} @else {
+								<div class="w-full">
+									<label class="label label-text" for="password"> Contraseña </label>
+
+									<div class="input-group">
+										<input
+											id="password"
+											type="password"
+											class="input"
+											formControlName="password"
+											[ngClass]="{
+												'is-invalid': showErrors() && getPasswordError() !== ''
+											}"
+										/>
+
+										<span class="input-group-text">
+											<button
+												type="button"
+												data-toggle-password="{
+													'target': '#password'
+												}"
+												class="block"
+												aria-label="password toggle"
+											>
+												<span class="icon-[tabler--eye] hidden size-5 flex-shrink-0 text-base-content/80 password-active:block"></span>
+
+												<span class="icon-[tabler--eye-off] block size-5 flex-shrink-0 text-base-content/80 password-active:hidden"></span>
+											</button>
+										</span>
+									</div>
+								</div>
+
+								<span class="label">
+									<span class="label-text-alt">
+										<ul class="list-disc">
+											<li>Sin espacios</li>
+
+											<li>Al menos un caracter especial</li>
+
+											<li>Al menos un número</li>
+
+											<li>Al menos una letra mayúscula</li>
+
+											<li>Mínimo 8 caracteres</li>
+										</ul>
+									</span>
+								</span>
+
+								<span class="label h-3">
+									@if (showErrors()) {
+										<span class="label-text-alt">{{ getPasswordError() }}</span>
+									}
+								</span>
+							}
 						}
 					</div>
 				</div>
 
 				<div class="modal-footer flex flex-col gap-5 md:flex-row">
-					<button type="reset" class="btn btn-secondary btn-soft order-2 w-full md:order-1 md:flex-1" [disabled]="isLoading()" (click)="close()"><span class="icon-[tabler--playstation-x] size-4"></span> Cancelar</button>
+					<button type="button" class="btn btn-secondary btn-soft order-2 w-full md:order-1 md:flex-1" [disabled]="isLoading()" (click)="onReset()"><span class="icon-[tabler--playstation-x] size-4"></span> Cancelar</button>
 
 					<button type="submit" class="btn btn-primary order-1 w-full md:order-2 md:flex-1" [disabled]="isLoading()">
 						@if (isLoading()) {

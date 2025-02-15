@@ -37,7 +37,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "No data received";
+				_apiResponse.ErrorMessage = "Datos no recibidos.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -48,7 +48,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Invalid data";
+				_apiResponse.ErrorMessage = "Se enviaron datos no válidos.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -233,7 +233,7 @@ public class RoleOptionController(ILogger<RoleOptionController> logger, IRoleOpt
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "No data received";
+				_apiResponse.ErrorMessage = "Datos no recibidos.";
 
 				return BadRequest(_apiResponse);
 			}

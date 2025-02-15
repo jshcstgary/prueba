@@ -10,20 +10,13 @@ using PruebaViamaticaBackend.Services.Interfaces;
 
 namespace PruebaViamaticaBackend.Services;
 
-public class RoleOptionService : IRoleOptionService
+public class RoleOptionService(ILogger<IRoleOptionService> logger, IRoleOptionRepository repository, IMapper mapper) : IRoleOptionService
 {
-    private readonly ILogger<IRoleOptionService> _logger;
+    private readonly ILogger<IRoleOptionService> _logger = logger;
 
-    private readonly IRoleOptionRepository _repository;
+    private readonly IRoleOptionRepository _repository = repository;
 
-    private readonly IMapper _mapper;
-
-    public RoleOptionService(ILogger<IRoleOptionService> logger, IRoleOptionRepository repository, IMapper mapper)
-    {
-        _logger = logger;
-        _repository = repository;
-        _mapper = mapper;
-    }
+    private readonly IMapper _mapper = mapper;
 
     public async Task<RoleOptionDto> Create(RoleOptionCreateDto roleOptionCreateDto)
     {

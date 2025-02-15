@@ -4,14 +4,14 @@
 			<div class="modal-header">
 				<h3 class="modal-title">Ingresar opción del rol</h3>
 
-				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" aria-label="Close" (click)="close()">
+				<button type="button" class="btn btn-circle btn-text btn-sm absolute end-3 top-3" aria-label="Close" (click)="onReset()">
 					<span class="icon-[tabler--x] size-4"></span>
 				</button>
 			</div>
 
 			<form class="modal-body" [formGroup]="myForm" (ngSubmit)="onSubmit()">
 				@if (isLoading()) {
-					<div class="skeleton skeleton-animated h-10 w-full"></div>
+					<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
 				} @else {
 					<div class="w-full">
 						<label class="label label-text" for="name"> Nombre del rol </label>
@@ -35,7 +35,7 @@
 				}
 
 				@if (isLoading()) {
-					<div class="skeleton skeleton-animated h-10 w-full"></div>
+					<div class="skeleton skeleton-animated mb-3 h-10 w-full"></div>
 				} @else {
 					<div class="w-full">
 						<label class="label label-text" for="role-options"> Opción del rol </label>
@@ -45,7 +45,7 @@
 							id="role-options"
 							formControlName="roleOptions"
 							[ngClass]="{
-								'is-invalid': showErrors() && getNameError() !== ''
+								'is-invalid': showErrors() && getRoleOptionsError() !== ''
 							}"
 							(change)="addRoleOptionToForm($event)"
 						>
@@ -53,31 +53,31 @@
 								<option [value]="roleOption.id">{{ roleOption.name }}</option>
 							}
 						</select>
+
+						<span class="label h-3">
+							@if (showErrors()) {
+								<span class="label-text-alt">{{ getRoleOptionsError() }}</span>
+							}
+						</span>
 					</div>
 
-					<span class="label h-3">
-						@if (showErrors()) {
-							<span class="label-text-alt">{{ getRoleOptionsError() }}</span>
-						}
-					</span>
-				}
-
-				<div formArrayName="roleOptions">
-					<div>
+					<div formArrayName="roleOptions">
 						<div>
-							@for (roleOption of roleOptionsFormArray.controls; track $index) {
-								<span class="badge badge-primary badge-lg m-0.5 transition duration-300 ease-in-out removing:translate-x-5 removing:opacity-0" [formGroupName]="$index">
-									{{ roleOption.value.name }}
+							<div>
+								@for (roleOption of roleOptionsFormArray.controls; track $index) {
+									<span class="badge badge-primary badge-lg m-0.5 transition duration-300 ease-in-out removing:translate-x-5 removing:opacity-0" [formGroupName]="$index">
+										{{ roleOption.value.name }}
 
-									<button type="button" class="icon-[tabler--circle-x-filled] size-5 min-h-0 px-0" aria-label="Dismiss Button" (click)="removeRoleOptionFromForm($index)"></button>
-								</span>
-							}
+										<button type="button" class="icon-[tabler--circle-x-filled] size-5 min-h-0 px-0" aria-label="Dismiss Button" (click)="removeRoleOptionFromForm($index)"></button>
+									</span>
+								}
+							</div>
 						</div>
 					</div>
-				</div>
+				}
 
 				<div class="modal-footer flex flex-col gap-5 md:flex-row">
-					<button type="reset" class="btn btn-secondary btn-soft order-2 w-full md:order-1 md:flex-1" [disabled]="isLoading()" (click)="close()"><span class="icon-[tabler--playstation-x] size-4"></span> Cancelar</button>
+					<button type="button" class="btn btn-secondary btn-soft order-2 w-full md:order-1 md:flex-1" [disabled]="isLoading()" (click)="onReset()"><span class="icon-[tabler--playstation-x] size-4"></span> Cancelar</button>
 
 					<button type="submit" class="btn btn-primary order-1 w-full md:order-2 md:flex-1" [disabled]="isLoading()">
 						@if (isLoading()) {

@@ -6,70 +6,108 @@
 			</h5>
 
 			<form class="mb-4 space-y-4" [formGroup]="myForm" (ngSubmit)="onSubmit()">
-				<div class="w-full">
-					<label class="label label-text" for="emailUsername"> Email o username </label>
+				@if (isLoading()) {
+					<div class="skeleton skeleton-animated h-10 w-full"></div>
+				} @else {
+					<div class="w-full">
+						<label class="label label-text" for="username"> Email o username </label>
 
-					<input
-						type="text"
-						class="input"
-						id="emailUsername"
-						formControlName="emailUsername"
-						value="JoshCast"
-						[ngClass]="{
-							'is-invalid': !isFormValid
-						}"
-					/>
-
-					<span class="label h-3">
-						@if (!isFormValid) {
-							<span class="label-text-alt">Email o usuario incorrecto</span>
-						}
-					</span>
-				</div>
-
-				<div class="w-full">
-					<label class="label label-text" for="password"> Contraseña </label>
-
-					<div class="input-group">
 						<input
-							id="password"
-							type="password"
+							type="text"
 							class="input"
-							formControlName="password"
-							value="Pwd_1242@mA1"
+							id="username"
+							formControlName="username"
 							[ngClass]="{
-								'is-invalid': !isFormValid
+								'is-invalid': showErrors() && getUsernameError() !== ''
 							}"
 						/>
 
-						<span class="input-group-text">
-							<button
-								type="button"
-								data-toggle-password='{
-									"target": "#password"
-								}'
-								class="block"
-								aria-label="password toggle"
-							>
-								<span class="icon-[tabler--eye] hidden size-5 flex-shrink-0 text-base-content/80 password-active:block"></span>
-
-								<span class="icon-[tabler--eye-off] block size-5 flex-shrink-0 text-base-content/80 password-active:hidden"></span>
-							</button>
+						<span class="label h-3">
+							@if (showErrors()) {
+								<span class="label-text-alt">{{ getUsernameError() }}</span>
+							}
 						</span>
 					</div>
+				}
 
-					<span class="label h-3">
-						@if (!isFormValid) {
-							<span class="label-text-alt">Contraseña incorrecta</span>
-						}
-					</span>
-				</div>
+				@if (isLoading()) {
+					<div class="skeleton skeleton-animated h-10 w-full"></div>
+				} @else {
+					<div class="w-full">
+						<label class="label label-text" for="password"> Contraseña </label>
+
+						<div class="input-group">
+							<input
+								id="password"
+								type="password"
+								class="input"
+								formControlName="password"
+								[ngClass]="{
+									'is-invalid': showErrors() && getPasswordError() !== ''
+								}"
+							/>
+
+							<span class="input-group-text">
+								<button
+									type="button"
+									data-toggle-password='{
+									"target": "#password"
+								}'
+									class="block"
+									aria-label="password toggle"
+								>
+									<span class="icon-[tabler--eye] hidden size-5 flex-shrink-0 text-base-content/80 password-active:block"></span>
+
+									<span class="icon-[tabler--eye-off] block size-5 flex-shrink-0 text-base-content/80 password-active:hidden"></span>
+								</button>
+							</span>
+						</div>
+
+						<span class="label h-3">
+							@if (showErrors()) {
+								<span class="label-text-alt">{{ getPasswordError() }}</span>
+							}
+						</span>
+					</div>
+				}
+
+				@if (isLoading()) {
+					<div class="skeleton skeleton-animated h-10 w-full"></div>
+				} @else {
+					<div class="w-full">
+						<label class="label label-text" for="role"> Opción del rol </label>
+
+						<select
+							class="select"
+							id="role"
+							formControlName="idRole"
+							[ngClass]="{
+								'is-invalid': showErrors() && getRoleError() !== ''
+							}"
+						>
+							@for (role of roles(); track $index) {
+								<option [value]="role.id">{{ role.name }}</option>
+							}
+						</select>
+
+						<span class="label h-3">
+							@if (showErrors()) {
+								<span class="label-text-alt">{{ getRoleError() }}</span>
+							}
+						</span>
+					</div>
+				}
 
 				<div class="card-actions mt-3">
-					<button type="submit" class="btn btn-primary w-full">Iniciar sesión</button>
+					<button type="submit" class="btn btn-primary w-full" [disabled]="isLoading()">
+						@if (isLoading()) {
+							<span class="loading loading-spinner"></span>
+						}
+
+						Iniciar sesión
+					</button>
 				</div>
 			</form>
-
 		</div>
 	</div>
 </div>

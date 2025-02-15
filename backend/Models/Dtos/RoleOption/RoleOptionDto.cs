@@ -13,5 +13,9 @@ public class RoleOptionDto
 
     [Required]
     [MaxLength(20)]
+    public string Link { get; set; } = null!;
+
+    [Required]
+    [MaxLength(20)]
     public string Status { get; set; } = null!;
 }

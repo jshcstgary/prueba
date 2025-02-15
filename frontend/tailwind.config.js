@@ -13,7 +13,7 @@ module.exports = {
 	},
 	plugins: [require("flyonui"), require("flyonui/plugin")],
 	flyonui: {
-		themes: ["light"],
+		themes: ["dark"],
 		vendors: true
 	}
 };

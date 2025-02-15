@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Net;
 
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "No data received";
+				_apiResponse.ErrorMessage = "Datos no recibidos.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -47,7 +48,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "Invalid data";
+				_apiResponse.ErrorMessage = "Se enviaron datos no válidos.";
 
 				return BadRequest(_apiResponse);
 			}
@@ -95,13 +96,20 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
-	public async Task<ActionResult<ApiResponse>> GetAll()
+	public async Task<ActionResult<ApiResponse>> GetAll([FromQuery] string? status)
 	{
 		_logger.LogInformation("Executing RoleController class - GetAll method");
 
 		try
 		{
-			IEnumerable<RoleDto> personsDto = await _service.GetAll();
+			Expression<Func<Role, bool>>? filter = null;
+
+			if (status != null)
+			{
+				filter = role => role.Status == status;
+			}
+
+			IEnumerable<RoleDto> personsDto = await _service.GetAll(filter);
 
 			_logger.LogInformation("RoleController class - GetAll method - Data retrieved");
 
@@ -225,7 +233,7 @@ public class RoleController(ILogger<RoleController> logger, IRoleService service
 
 				_apiResponse.StatusCode = HttpStatusCode.BadRequest;
 				_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
-				_apiResponse.ErrorMessage = "No data received";
+				_apiResponse.ErrorMessage = "Datos no recibidos.";
 
 				return BadRequest(_apiResponse);
 			}
