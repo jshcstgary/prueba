@@ -12,5 +12,5 @@ public partial class Session
 
 	public string Status { get; set; } = null!;
 
-	public virtual User IdUserNavigation { get; set; } = null!;
+	public virtual User? User { get; set; } = null;
 }

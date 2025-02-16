@@ -18,8 +18,7 @@ public class PersonService(ILogger<IPersonService> logger, IPersonRepository rep
 
 	private readonly IMapper _mapper = mapper;
 
-    // public async Task<PersonDto> Create(PersonCreateDto personCreateDto)
-    public async Task<RowsChanged> Create(ICollection<PersonCreateDto> personsCreateDto)
+	public async Task<RowsChanged> Create(ICollection<PersonCreateDto> personsCreateDto)
 	{
 		_logger.LogInformation("Executing Service class - Create method");
 
@@ -29,9 +28,9 @@ public class PersonService(ILogger<IPersonService> logger, IPersonRepository rep
 
 			foreach (Person person in persons)
 			{
-				person.User!.Mail = $"{person.Names.ToLower().First()}{person.Surnames.ToLower().Split(" ")[0]}{person.Surnames.ToLower().Split(" ")[1].First()}@mail.com";
-				person.User!.Status = Status.Active;
-				person.User!.SessionActive = SessionStatus.Inactive;
+				person.User.Mail = $"{person.Names.ToLower().First()}{person.Surnames.ToLower().Split(" ")[0]}{person.Surnames.ToLower().Split(" ")[1].First()}@mail.com";
+				person.User.Status = Status.Active;
+				person.User.SessionActive = SessionStatus.Inactive;
 			}
 
 			RowsChanged rowsChanged = await _repository.Create(persons);
@@ -148,7 +147,8 @@ public class PersonService(ILogger<IPersonService> logger, IPersonRepository rep
 				return false;
 			}
 
-			person.User!.Status = Status.Delete;
+			person.User.Status = Status.Delete;
+			person.User.Roles = [];
 
 			await _repository.Delete(person!);
 

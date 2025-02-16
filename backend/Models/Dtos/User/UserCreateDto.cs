@@ -19,6 +19,5 @@ public class UserCreateDto
 	public string Password { get; set; } = null!;
 
 	[Required]
-	// public string IdRoles { get; set; } = null!;
 	public ICollection<RoleDto> Roles { get; set; } = [];
 }

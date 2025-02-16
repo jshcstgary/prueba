@@ -1,4 +1,5 @@
 namespace PruebaViamaticaBackend.Models;
+
 public class PersonCount
 {
 	public string Label { get; set; } = "";

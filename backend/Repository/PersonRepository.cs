@@ -33,7 +33,6 @@ public class PersonRepository : IPersonRepository
 		await _context.SaveChangesAsync();
 	}
 
-	// public async Task<Person> Create(Person newPerson)
 	public async Task<RowsChanged> Create(ICollection<Person> newPersons)
 	{
 		_logger.LogInformation("Executing Repository class - Create method");
@@ -44,7 +43,7 @@ public class PersonRepository : IPersonRepository
 		{
 			try
 			{
-				string idRoles = string.Join(",", newPerson.User!.Roles.Select(role => role.Id));
+				string idRoles = string.Join(",", newPerson.User.Roles.Select(role => role.Id));
 
 				SqlParameter namesParam = new("@Names", SqlDbType.NVarChar, 60)
 				{
@@ -72,7 +71,7 @@ public class PersonRepository : IPersonRepository
 
 				SqlParameter usernameParam = new("@Username", SqlDbType.NVarChar, 50)
 				{
-					Value = newPerson.User!.Username,
+					Value = newPerson.User.Username,
 					Direction = System.Data.ParameterDirection.Input
 				};
 
@@ -213,23 +212,23 @@ public class PersonRepository : IPersonRepository
 			int allUsers = await _context.Persons.CountAsync();
 
 			int activeUsers = await _context.Persons
-				.Where(person => person.User!.Status == Status.Active)
+				.Where(person => person.User.Status == Status.Active)
 				.CountAsync();
 
 			int deletedUsers = await _context.Persons
-				.Where(person => person.User!.Status == Status.Delete)
+				.Where(person => person.User.Status == Status.Delete)
 				.CountAsync();
 
 			int lockedUsers = await _context.Persons
-				.Where(person => person.User!.Status == Status.Lock)
+				.Where(person => person.User.Status == Status.Lock)
 				.CountAsync();
 
 			int activeSessionUsers = await _context.Persons
-				.Where(person => person.User!.SessionActive == SessionStatus.Active)
+				.Where(person => person.User.SessionActive == SessionStatus.Active)
 				.CountAsync();
 
 			int inactiveSessionUsers = await _context.Persons
-				.Where(person => person.User!.SessionActive == SessionStatus.Inactive)
+				.Where(person => person.User.SessionActive == SessionStatus.Inactive)
 				.CountAsync();
 
 			return [
@@ -304,7 +303,7 @@ public class PersonRepository : IPersonRepository
 
 		try
 		{
-			string idRoles = string.Join(",", person.User!.Roles.Select(role => role.Id));
+			string idRoles = string.Join(",", person.User.Roles.Select(role => role.Id));
 
 			SqlParameter idPersonParam = new("@IdPerson", SqlDbType.Int)
 			{
@@ -338,7 +337,7 @@ public class PersonRepository : IPersonRepository
 
 			SqlParameter idUserParam = new("@IdUser", SqlDbType.Int)
 			{
-				Value = person.User!.Id,
+				Value = person.User.Id,
 				Direction = System.Data.ParameterDirection.Input
 			};
 

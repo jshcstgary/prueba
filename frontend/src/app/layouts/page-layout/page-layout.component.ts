@@ -102,28 +102,27 @@ export class PageLayoutComponent {
 	}
 
 	public onSignOut(): void {
-		localStorage.removeItem(LocalStorageKeys.idPerson);
-		localStorage.removeItem(LocalStorageKeys.idRole);
-		localStorage.removeItem(LocalStorageKeys.isAuthenticated);
+		this.isLoading.set(!this.isLoading());
 
-		this.authService.authenticatedIdRole.set(0);
-		this.authService.authenticatedPerson.set(null);
-		this.authService.authenticatedRoleOptions.set([]);
+		this.authService.signOut().subscribe({
+			next: () => {
+				localStorage.removeItem(LocalStorageKeys.idPerson);
+				localStorage.removeItem(LocalStorageKeys.idRole);
+				localStorage.removeItem(LocalStorageKeys.isAuthenticated);
 
-		this.router.navigate(["/auth"]);
-		// this.isLoading.set(!this.isLoading());
+				this.authService.authenticatedIdRole.set(0);
+				this.authService.authenticatedPerson.set(null);
+				this.authService.authenticatedRoleOptions.set([]);
 
-		// this.authService.signOut().subscribe({
-		// 	next: () => {
-		// 		this.isLoading.set(!this.isLoading());
+				this.isLoading.set(!this.isLoading());
 
-		// 		this.router.navigate(["/auth"]);
-		// 	},
-		// 	error: () => {
-		// 		openToast("No se pudo cerrar sesión", "error");
+				this.router.navigate(["/auth"]);
+			},
+			error: () => {
+				openToast("No se pudo cerrar sesión", "error");
 
-		// 		this.isLoading.set(!this.isLoading());
-		// 	}
-		// });
+				this.isLoading.set(!this.isLoading());
+			}
+		});
 	}
 }

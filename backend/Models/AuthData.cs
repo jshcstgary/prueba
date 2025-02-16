@@ -4,12 +4,12 @@ namespace PruebaViamaticaBackend.Models;
 
 public class AuthData
 {
-    [Required]
-    public string Username { get; set; } = null!;
+	[Required]
+	public string Username { get; set; } = null!;
 
-    [Required]
-    public string Password { get; set; } = null!;
+	[Required]
+	public string Password { get; set; } = null!;
 
-    [Required]
-    public int IdRole { get; set; }
+	[Required]
+	public int IdRole { get; set; }
 }

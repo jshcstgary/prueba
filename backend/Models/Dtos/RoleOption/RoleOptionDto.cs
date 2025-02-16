@@ -4,18 +4,18 @@ namespace PruebaViamaticaBackend.Models.Dtos.RoleOption;
 
 public class RoleOptionDto
 {
-    [Required]
-    public int Id { get; set; }
+	[Required]
+	public int Id { get; set; }
 
-    [Required]
-    [MaxLength(60)]
-    public string Name { get; set; } = null!;
+	[Required]
+	[MaxLength(60)]
+	public string Name { get; set; } = null!;
 
-    [Required]
-    [MaxLength(20)]
-    public string Link { get; set; } = null!;
+	[Required]
+	[MaxLength(20)]
+	public string Link { get; set; } = null!;
 
-    [Required]
-    [MaxLength(20)]
-    public string Status { get; set; } = null!;
+	[Required]
+	[MaxLength(20)]
+	public string Status { get; set; } = null!;
 }

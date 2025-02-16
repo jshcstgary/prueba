@@ -7,13 +7,13 @@ namespace PruebaViamaticaBackend.Services.Interfaces;
 
 public interface IRoleOptionService
 {
-    Task<RoleOptionDto> Create(RoleOptionCreateDto roleOptionCreateDto);
+	Task<RoleOptionDto> Create(RoleOptionCreateDto roleOptionCreateDto);
 
-    Task<IEnumerable<RoleOptionDto>> GetAll(Expression<Func<RoleOption, bool>>? filter = null);
+	Task<IEnumerable<RoleOptionDto>> GetAll(Expression<Func<RoleOption, bool>>? filter = null);
 
-    Task<RoleOptionDto?> GetOne(Expression<Func<RoleOption, bool>> filter);
+	Task<RoleOptionDto?> GetOne(Expression<Func<RoleOption, bool>> filter);
 
-    Task<RoleOptionDto?> Update(RoleOptionUpdateDto roleOptionUpdateDto);
+	Task<RoleOptionDto?> Update(RoleOptionUpdateDto roleOptionUpdateDto);
 
-    Task<bool> Delete(int id);
+	Task<bool> Delete(int id);
 }

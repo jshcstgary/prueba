@@ -130,7 +130,7 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbCo
 				.HasMaxLength(15)
 				.HasColumnName("status");
 
-			entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Sessions)
+			entity.HasOne(d => d.User).WithMany(p => p.Sessions)
 				.HasForeignKey(d => d.IdUser)
 				.OnDelete(DeleteBehavior.ClientSetNull)
 				.HasConstraintName("FK__Sessions__Users");

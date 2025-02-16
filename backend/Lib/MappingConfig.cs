@@ -10,20 +10,20 @@ namespace PruebaViamaticaBackend.Lib;
 
 public class MappingConfig : Profile
 {
-    public MappingConfig()
-    {
-        CreateMap<Person, PersonDto>().ReverseMap();
-        CreateMap<Person, PersonCreateDto>().ReverseMap();
-        CreateMap<Person, PersonUpdateDto>().ReverseMap();
+	public MappingConfig()
+	{
+		CreateMap<Person, PersonDto>().ReverseMap();
+		CreateMap<Person, PersonCreateDto>().ReverseMap();
+		CreateMap<Person, PersonUpdateDto>().ReverseMap();
 
-        CreateMap<Role, RoleDto>().ReverseMap();
-        CreateMap<Role, RoleCreateDto>().ReverseMap();
+		CreateMap<Role, RoleDto>().ReverseMap();
+		CreateMap<Role, RoleCreateDto>().ReverseMap();
 
-        CreateMap<RoleOption, RoleOptionDto>().ReverseMap();
-        CreateMap<RoleOption, RoleOptionCreateDto>().ReverseMap();
+		CreateMap<RoleOption, RoleOptionDto>().ReverseMap();
+		CreateMap<RoleOption, RoleOptionCreateDto>().ReverseMap();
 
-        CreateMap<User, UserDto>().ReverseMap();
-        CreateMap<User, UserCreateDto>().ReverseMap();
-        CreateMap<User, UserUpdateDto>().ReverseMap();
-    }
+		CreateMap<User, UserDto>().ReverseMap();
+		CreateMap<User, UserCreateDto>().ReverseMap();
+		CreateMap<User, UserUpdateDto>().ReverseMap();
+	}
 }

@@ -12,6 +12,5 @@ public partial class Person
 
 	public DateTime BirthDate { get; set; }
 
-	public virtual User? User { get; set; }
-	// public virtual ICollection<User> Users { get; set; } = [];
+	public virtual User User { get; set; } = new();
 }

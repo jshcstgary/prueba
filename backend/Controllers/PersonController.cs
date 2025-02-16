@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +24,6 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status408RequestTimeout)]
 	[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
-	// public async Task<ActionResult<ApiResponse>> Create([FromBody] PersonCreateDto personCreateDto)
 	public async Task<ActionResult<ApiResponse>> Create([FromBody] ICollection<PersonCreateDto> personsCreateDto)
 	{
 		_logger.LogInformation("Executing PersonController class - Create method");
@@ -45,7 +43,6 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 					return BadRequest(_apiResponse);
 				}
 
-			// if (personsCreateDto.User == null)
 			if (personsCreateDto.Any(p => p.User == null))
 			{
 				_logger.LogError("PersonController class - Create method - No data recieved.");
@@ -76,7 +73,6 @@ public class PersonController(ILogger<PersonController> logger, IPersonService s
 			_apiResponse.StatusMessage = _apiResponse.StatusCode.ToString();
 			_apiResponse.Data = rowsChanged;
 
-			// return CreatedAtRoute("PersonController_GetById", rowsChanged, _apiResponse);
 			return StatusCode(StatusCodes.Status207MultiStatus, _apiResponse);
 		}
 		catch (RetryLimitExceededException ex)

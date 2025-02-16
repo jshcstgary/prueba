@@ -34,4 +34,40 @@ public class AuthService(ILogger<IAuthService> logger, IAuthRepository repositor
 			_logger.LogInformation("Leaving Service class - SignIn method");
 		}
 	}
+
+	public async Task SetSession(int idUser, bool status)
+	{
+		_logger.LogInformation("Executing Service class - SetSession method");
+
+		try
+		{
+			await _repository.SetSession(idUser, status);
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving Service class - SetSession method");
+		}
+	}
+
+	public async Task<int> SignOut(int idPerson)
+	{
+		_logger.LogInformation("Executing Service class - SignIn method");
+
+		try
+		{
+			return await _repository.SignOut(idPerson);
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Leaving Service class - SignIn method");
+		}
+	}
 }

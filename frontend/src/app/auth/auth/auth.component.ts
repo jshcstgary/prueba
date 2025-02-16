@@ -114,8 +114,6 @@ export class AuthComponent {
 				this.authService.authenticatedIdRole.set(authData.idRole);
 				this.authService.authenticatedRoleOptions.set(roleOptions);
 
-				// TODO: Update sessionActive field in DB
-
 				this.isLoading.set(!this.isLoading());
 
 				this.router.navigate(["/"]);
